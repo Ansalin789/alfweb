@@ -890,7 +890,7 @@ const Index = () => {
       zIndex: 2,
       // backgroundColor: '#1D3557',
       borderRadius: '50px',
-      padding: '60px',
+      padding: '10px 0px 40px',
       boxShadow: '0px 10px 30px rgba(0,0,0,0.2)',
     }}
   >

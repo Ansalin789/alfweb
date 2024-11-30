@@ -81,7 +81,7 @@ const Team = () => {
             </div>
             <div className="col-lg-6 col-md-12">
               <div className="dreamit-about-thumb">
-                <img src="assets/images/about/about-2.png" alt />
+                <img src="assets/images/about/teacher1.png" alt />
                 {/* about-shape */}
                 <div className="about-shape-thumb1 bounce-animate2">
                   <img src="assets/images/about/about-shpe.png" alt />
@@ -143,7 +143,7 @@ const Team = () => {
             <div className="col-lg-4 col-md-6">
               <div className="single_team">
                 <div className="single_team_thumb1">
-                  <img src="assets/images/resource/team-1.jpg" alt="logo" />
+                  <img src="assets/images/resource/team1.png" alt="logo" />
                 </div>
                 <div className="single_team_content">
                   <div className="team-title">
@@ -173,7 +173,7 @@ const Team = () => {
             <div className="col-lg-4 col-md-6">
               <div className="single_team">
                 <div className="single_team_thumb1">
-                  <img src="assets/images/resource/team-2.jpg" alt="image" />
+                  <img src="assets/images/resource/team2.png" alt="image" />
                 </div>
                 <div className="single_team_content">
                   <div className="team-title">
@@ -203,7 +203,7 @@ const Team = () => {
             <div className="col-lg-4 col-md-6">
               <div className="single_team">
                 <div className="single_team_thumb1">
-                  <img src="assets/images/resource/team-3.jpg" alt="image" />
+                  <img src="assets/images/resource/team3.png" alt="image" />
                 </div>
                 <div className="single_team_content">
                   <div className="team-title">
@@ -233,7 +233,7 @@ const Team = () => {
             <div className="col-lg-4 col-md-6">
               <div className="single_team">
                 <div className="single_team_thumb1">
-                  <img src="assets/images/resource/team-1.jpg" alt="logo" />
+                  <img src="assets/images/resource/team4.png" alt="logo" />
                 </div>
                 <div className="single_team_content">
                   <div className="team-title">
@@ -263,7 +263,7 @@ const Team = () => {
             <div className="col-lg-4 col-md-6">
               <div className="single_team">
                 <div className="single_team_thumb1">
-                  <img src="assets/images/resource/team-2.jpg" alt="image" />
+                  <img src="assets/images/resource/team5.png" alt="image" />
                 </div>
                 <div className="single_team_content">
                   <div className="team-title">
@@ -293,7 +293,7 @@ const Team = () => {
             <div className="col-lg-4 col-md-6">
               <div className="single_team">
                 <div className="single_team_thumb1">
-                  <img src="assets/images/resource/team-3.jpg" alt="image" />
+                  <img src="assets/images/resource/team6.png" alt="image" />
                 </div>
                 <div className="single_team_content">
                   <div className="team-title">
