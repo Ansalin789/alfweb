@@ -1,0 +1,74 @@
+.card {
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: -.1rem 1.7rem 6.6rem -3.2rem rgba(0, 0, 0, 0.5);
+  height: 15rem;
+  position: relative;
+  transition: all 1s ease;
+  width: 15rem;
+  max-width: 100%; /* Added for responsiveness */
+  max-height: 100%; /* Added for responsiveness */
+}
+
+.flipCard {
+  height: 100%; /* Adjusted for responsiveness */
+  perspective: 100rem;
+  position: absolute;
+  right: 0;
+  transition: all 1s ease;
+  visibility: hidden;
+  width: 100%; /* Adjusted for responsiveness */
+  z-index: 50; /* Lowered to place behind the container */
+}
+
+.flipCardContainer {
+  height: 100%;
+    position: absolute;
+    left: 0;
+    transform-origin: bottom !important;
+    transform-style: preserve-3d;
+    transition: all 1s ease;
+    width: 100%;
+}
+
+.cardFront,
+.cardBack {
+  backface-visibility: hidden;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.cardFront {
+  background-color: #fafbfa;
+  height: 100%; /* Adjusted for responsiveness */
+  width: 100%; /* Adjusted for responsiveness */
+}
+
+.cardFrontTp {
+  align-items: center;
+  clip-path: polygon(0 0, 100% 0, 100% 90%, 57% 90%, 50% 100%, 43% 90%, 0 90%);
+  display: flex;
+  flex-direction: column;
+  height: 12rem;
+  justify-content: center;
+  padding: .75rem;
+}
+
+.cardFrontCity {
+  background: linear-gradient(to bottom, #ff73b9, #ff40a1);
+}
+
+.cardFrontIcon {
+  fill: #fafbfa;
+  font-size: 3vw;
+  height: 3.25rem;
+  margin-top: -.5rem;
+  width: 3.25rem;
+}
+
+.cardBack {
+  background-color: #fafbfa;
+  transform: rotateY(180deg);
+}

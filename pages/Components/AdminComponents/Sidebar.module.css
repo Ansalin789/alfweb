@@ -1,0 +1,59 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: #f1f5f9; /* slate-100 */
+}
+
+.header {
+    padding: 12px 8px;
+    padding-left: 56px; /* sm:pl-14 */
+    border: 1px solid black;
+}
+
+.sidebar {
+    width: 112px; /* w-28 */
+    height: 100vh;
+    position: relative;
+    padding: 48px 0;
+    border: 1px solid black;
+}
+
+.sidebarWide {
+    width: 320px; /* sm:w-80 */
+}
+
+.linksContainer {
+    width: 50%; /* w-[50%] */
+    position: absolute;
+    right: 0;
+}
+
+.linksContainerWide {
+    width: 80%; /* sm:w-[80%] */
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    padding: 8px 12px;
+    background-color: white;
+    border: 1px solid black;
+    box-shadow: -5px 5px 0px #000000;
+    margin-top: 20px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.link:first-child {
+    margin-top: 0;
+}
+
+.linkText {
+    display: none;
+}
+
+.linkTextWide {
+    display: inline-block;
+}
