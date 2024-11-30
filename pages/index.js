@@ -681,7 +681,7 @@ const Index = () => {
                   <div className="circle-progress-title">
                     <h4>
                       {" "}
-                      Teachers <br /> Satisfaction{" "}
+                      TEACHERS <br /> Satisfaction{" "}
                     </h4>
                   </div>
                 </div>
@@ -822,9 +822,81 @@ const Index = () => {
  </div>
 </div> */}
 
-<div className="social-media-marketing-services" data-aos="fade-up">
-  <div className="container">
-    <h2 className="text-center" style={{ color: '#E63946' }}>How to Start</h2>
+<div
+  className="social-media-marketing-services"
+  data-aos="fade-up"
+  style={{
+    backgroundColor: '#050A1E',
+    position: 'relative',
+    padding: ' 20px',
+    color: '#FFFFFF',
+    overflow: 'hidden',
+    borderRadius:'200px 0px 200px 0px',
+  }}
+>
+  {/* Outer Top Curve */}
+  <div
+    style={{
+      position: 'absolute',
+      top: '-50px',
+      left: '0',
+      width: '100%',
+      height: '150px',
+      // background: 'linear-gradient(135deg, #457B9D, #1D3557)',
+      clipPath: 'polygon(0 100%, 50% 0, 100% 100%)',
+      zIndex: 1,
+    }}
+  ></div> 
+
+  {/* Outer Bottom Wave */}
+  <svg
+    style={{
+      position: 'absolute',
+      bottom: '-50px',
+      left: '0',
+      width: '100%',
+      zIndex: 1,
+    }}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1440 320"
+  >
+    <path
+      fill="#E63946"
+      fillOpacity="1"
+      d="M0,96L120,122.7C240,149,480,203,720,213.3C960,224,1200,192,1320,176L1440,160L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"
+    ></path>
+  </svg>
+
+  {/* Outer Side Accent */}
+  <div
+    style={{
+      position: 'absolute',
+      top: '50%',
+      left: '-20px',
+      width: '50px',
+      height: '300px',
+      background: 'linear-gradient(180deg, #A8DADC, transparent)',
+      borderRadius: '25px',
+      transform: 'rotate(-45deg)',
+      zIndex: 1,
+    }}
+  ></div>
+
+  {/* Main Content */}
+  <div
+    className="container"
+    style={{
+      position: 'relative',
+      zIndex: 2,
+      // backgroundColor: '#1D3557',
+      borderRadius: '50px',
+      padding: '60px',
+      boxShadow: '0px 10px 30px rgba(0,0,0,0.2)',
+    }}
+  >
+    <h2 className="text-center" style={{ color: '#E63946', marginBottom: '20px' }}>
+      How to Start
+    </h2>
     <Pprocess />
   </div>
 </div>

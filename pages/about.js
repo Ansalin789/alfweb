@@ -59,7 +59,7 @@ const About = () => {
           <div className="row align-items-center">
             <div className="col-lg-6">
               <div className="about-thumb">
-                <img src="assets/images/about/about3.png" alt />
+                <img src="assets/images/about/about8.png" alt />
               </div>
             </div>
             <div className="col-lg-6" >

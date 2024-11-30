@@ -8528,23 +8528,10 @@ ul.social-box li a:hover {
 
 
 .social-media-marketing-services {
-  position: relative;
-  height: 100vh; /* Full viewport height */
-  background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Warm gradient */
+  padding: 60px 0;
+  background: #ffffff;
+    background-repeat: no-repeat;
 }
-
-.container {
-  position: relative;
-  z-index: 2; /* Ensure content is above the background */
-  padding: 40px;
-}
-
-.text-center {
-  color: #fff; /* Text color for contrast */
-}
-
-  
-
 
 /* .container {
   max-width: 1200px;
