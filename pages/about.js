@@ -565,7 +565,7 @@ const About = () => {
             <div className="col-lg-4 col-md-6">
               <div className="single_team">
                 <div className="single_team_thumb1">
-                  <img src="assets/images/resource/team-1.jpg" alt="image" />
+                  <img src="assets/images/about/per1.png" alt="image" />
                 </div>
                 <div className="single_team_content">
                   <div className="team-title">
@@ -595,7 +595,7 @@ const About = () => {
             <div className="col-lg-4 col-md-6">
               <div className="single_team">
                 <div className="single_team_thumb1">
-                  <img src="assets/images/resource/team-2.jpg" alt="image" />
+                  <img src="assets/images/about/per2.png" alt="image" />
                 </div>
                 <div className="single_team_content">
                   <div className="team-title">
@@ -625,7 +625,7 @@ const About = () => {
             <div className="col-lg-4 col-md-6">
               <div className="single_team">
                 <div className="single_team_thumb1">
-                  <img src="assets/images/resource/team-3.jpg" alt="image" />
+                  <img src="assets/images/about/per3.png" alt="image" />
                 </div>
                 <div className="single_team_content">
                   <div className="team-title">
