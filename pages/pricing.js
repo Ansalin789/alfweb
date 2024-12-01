@@ -9,104 +9,136 @@ const Pricing = () => {
       tier: "ELITE",
       price: "$16 / Hour",
       teachers: [
-        "Proficient Arabic (Native) Teacher",
-        "Institutionally Certified",
-        "Top 5% Rated Teacher",
+        { name: "Proficient Arabic (Native) Teacher", status: "tick" },
+        { name: "Institutionally Certified", status: "tick" },
+        { name: "Top 5% Rated Teacher", status: "tick" }
       ],
       academics: [
-        "E-Certificate",
-        "Direct Chat with Teacher & Coach",
-        "Dedicated Academic Coach",
-        "Coaching and Planning Session every Quarterly",
-        "Progress Report Every Year",
+        { name: "E-Certificate", status: "tick" },
+        { name: "Direct Chat with Teacher & Coach", status: "tick" },
+        { name: "Dedicated Academic Coach", status: "tick" },
+        { name: "Coaching and Planning Session", status: "tick" },
+        { name: "Progress Report", status: "tick" }
       ],
       portalAccess: [
-        "Full Dashboard Access",
-        "E-Syllabus Access(Including HW, quizzes, and exams)",
-        "Welcome Package *",
-        "Video Recordings",
+        { name: "Full Dashboard Access", status: "tick" },
+        { name: "E-Syllabus Access", status: "tick" },
+        { name: "Welcome Package", status: "tick" },
+        { name: "Video Recordings", status: "tick" }
       ],
-      scheduling: ["Unlimited Reschedule of Class Per Month", "Unlimited Lesson Reschedule"],
-      discounts: "10% Discount for Family",
-      color: "#0033a1", // Example color for Elite tier
+      scheduling: [
+        { name: "Unlimited Reschedule of Class Per Month", status: "tick" },
+        { name: "Unlimited Lesson Reschedule", status: "tick" }
+      ],
+      discounts: [
+        { name: "10% Discount for Family", status: "tick" }
+      ],    
+      color: "#ff0000" // Example color for ELITE tier
     },
     {
       tier: "PREMIUM",
       price: "$11 / Hour",
       teachers: [
-        "Expert Arabic (Native) Teacher",
-        "Institutionally Certified",
-        "Top 5 Star Rated Teacher",
+        { name: "Proficient Arabic (Native) Teacher", status: "tick" },
+        { name: "Institutionally Certified", status: "tick" },
+        { name: "Top 5% Rated Teacher", status: "tick" }
       ],
       academics: [
-        "E-Certificate",
-        "Direct Chat with Teacher & Coach",
-        "Dedicated Academic Coach",
-        "Coaching and Planning Session every Quarterly",
-        "Progress Report Every Year",
+        { name: "E-Certificate", status: "tick" },
+        { name: "Direct Chat with Teacher & Coach", status: "tick" },
+        { name: "Dedicated Academic Coach", status: "tick" },
+        { name: "Coaching and Planning Session every Quarterly", status: "tick" },
+        { name: "Progress Report Twice a Year", status: "tick" }
       ],
       portalAccess: [
-        "Full Dashboard Access",
-        "Knowledge Base Access",
-        "Assignments",
-        "Recorded Classes",
+        { name: "Full Dashboard Access", status: "tick" },
+        { name: "E-Syllabus Access", status: "tick" },
+        { name: "Welcome Package", status: "wrong" },
+        { name: "Video Recordings", status: "wrong" }
       ],
-      scheduling: ["Unlimited Reschedule of Class Per Month", "Unlimited Lesson Reschedule"],
-      discounts: "10% Discount for Family",
-      color: "#cc0000", // Example color for Premium tier
+      
+      scheduling: [
+        { name: "Up to 4 Lesson Reschedules Per Month", status: "tick" },
+        { name: "Up to 1 Lesson Cancellation Per Month", status: "tick" }
+      ],
+      discounts: [{ name: "5% Family Discount", status: "tick" }],
+      color: "#cc0000" // Example color for Premium tier
     },
     {
       tier: "STANDARD",
       price: "$9 / Hour",
       teachers: [
-        "Expert Arabic (Native) Teacher",
-        "Institutionally Certified",
-        "Top 5 Star Rated Teacher",
+        { name: "Proficient Arabic (Native) Teacher", status: "tick" },
+        { name: "Institutionally Certified", status: "wrong" },
+        { name: "Top 5% Rated Teacher", status: "wrong" }
       ],
       academics: [
-        "E-Certificate",
-        "Direct Chat with Teacher & Coach",
-        "Dedicated Academic Coach",
-        "Coaching and Planning Session every Quarterly",
-        "Progress Report Every Year",
+        { name: "E-Certificate", status: "tick" },
+        { name: "Direct Chat with Teacher & Coach", status: "tick" },
+        { name: "Dedicated Academic Coach", status: "wrong" },
+        { name: "Coaching and Planning Session", status: "wrong" },
+        { name: "Progress Report Once a Year", status: "wrong" }
       ],
       portalAccess: [
-        "Full Dashboard Access",
-        "Knowledge Base Access",
-        "Assignments",
-        "Recorded Classes",
+        { name: "Limited Dashboard Access (Schedules Only)", status: "tick" },
+        { name: "E-Syllabus Access", status: "wrong" },
+        { name: "Welcome Package", status: "wrong" },
+        { name: "Video Recordings", status: "wrong" }
       ],
-      scheduling: ["Unlimited Reschedule of Class Per Month", "Unlimited Lesson Reschedule"],
-      discounts: "10% Discount for Family",
-      color: "#C0C0C0", // Example color for Standard tier
+      scheduling: [
+        { name: "Up to 2 Lesson Reschedules Per Month", status: "tick" },
+        { name: "Lesson Cancellations", status: "wrong" }
+      ],
+      discounts: [{ name: "Family Discount", status: "tick" }],
+      color: "#C0C0C0" // Example color for Standard tier
     },
     {
       tier: "BASIC",
       price: "$8 / Hour",
       teachers: [
-        "Expert Arabic (Native) Teacher",
-        "Institutionally Certified",
-        "Top 5 Star Rated Teacher",
+        { name: "Proficient Arabic (Native) Teacher", status: "tick" },
+        { name: "Institutionally Certified", status: "wrong" },
+        { name: "Top 5 Star Rated Teacher", status: "wrong" }
       ],
       academics: [
-        "E-Certificate",
-        "Direct Chat with Teacher & Coach",
-        "Dedicated Academic Coach",
-        "Coaching and Planning Session every Quarterly",
-        "Progress Report Every Year",
+        { name: "E-Certificate", status: "wrong" },
+        { name: "Direct Chat with Teacher & Coach", status: "wrong" },
+        { name: "Dedicated Academic Coach", status: "wrong" },
+        { name: "Coaching and Planning Session", status: "wrong" },
+        { name: "Progress Report", status: "wrong" }
       ],
       portalAccess: [
-        "Limited Dashboard Access",
-        "Knowledge Base Access",
-        "Assignments",
-        "Recorded Classes",
+        { name: "Limited Dashboard Access (Schedules Only)", status: "tick" },
+        { name: "E-Syllabus Access", status: "wrong" },
+        { name: "Welcome Package", status: "wrong" },
+        { name: "Video Recordings", status: "wrong" }
       ],
-      scheduling: ["Unlimited Reschedule of Class Per Month","Unlimited Reschedule of Class Per Month"],
-      discounts: "No Discount for Family",
-      color: "#999999", // Example color for Basic tier
-
-    },
+      scheduling: [
+        { name: "Lessons Reschedules", status: "wrong" },
+        { name: "Lesson Cancellations", status: "wrong" }
+      ],
+      discounts: [{ name: "Family Discount", status: "wrong" }],
+      color: "#999999" // Example color for Basic tier
+    }
   ];
+
+const renderStatusWithIcon = (status, text) => {
+  const icon = status === "tick" 
+    ? <span className={`${styles.tick}`}>&#10003;</span> 
+    : status === "wrong" 
+    ? <span className={`${styles.cross}`}>&#10005;</span> 
+    : null;
+
+  return (
+    <p className={styles.featureItem}>
+      {icon} <span>{text}</span>
+    </p>
+  );
+};
+
+  
+
+  
 
   return (
     <Layout>
@@ -118,7 +150,7 @@ const Pricing = () => {
               let gradient;
               let headerGradient;
               let headerStyle = {}; // Initialize headerStyle
-              let cardStyle = {}; // Initialize cardStyle for BASIC
+              let cardStyle = {}; // Initialize cardStyle for different tiers
 
               switch (plan.tier) {
                 case "ELITE":
@@ -126,9 +158,8 @@ const Pricing = () => {
                   headerGradient = "linear-gradient(to right, #ff0000, #ff7e5f)"; // Red to coral
                   break;
                 case "PREMIUM":
-                    gradient = "linear-gradient(to bottom, #00008B, #1E90FF)"; // Dark blue to dodger blue
+                  gradient = "linear-gradient(to bottom, #00008B, #1E90FF)"; // Dark blue to dodger blue
                   headerGradient = "linear-gradient(to right, #00008B, #1E90FF)"; // Dark blue to dodger blue
-                 
                   break;
                 case "STANDARD":
                   gradient = "linear-gradient(to bottom, #C0C0C0, #A9A9A9)"; // Silver to dark gray
@@ -137,69 +168,114 @@ const Pricing = () => {
                 case "BASIC":
                   gradient = "linear-gradient(to bottom, #FFD700, #FFC300)"; // Gold to a lighter gold
                   headerGradient = "linear-gradient(to right, #FFD700, #FFC300)"; // Gold to a lighter gold
-                 
                   break;
                 default:
-                  gradient = `linear-gradient(to bottom, ${plan.color}, #ffffff)`; // Fallback gradient
-                  headerGradient = `linear-gradient(to right, ${plan.color}, #ffffff)`; // Fallback gradient
+                  gradient = "linear-gradient(to bottom, #fff, #eee)"; // Fallback gradient
+                  headerGradient = "linear-gradient(to right, #fff, #eee)"; // Fallback gradient
               }
 
               return (
-                <div
-                  key={index}
-                  className="col-lg-3 col-md-6"
-                  style={{ marginBottom: "20px" }}
-                >
+                <div key={index} className="col-lg-3 col-md-6" style={{ marginBottom: "20px" }}>
                   <div
                     className={styles.pricingCard}
-                    style={{ borderColor: plan.color, ...cardStyle }} // Apply cardStyle here
+                    style={{ borderColor: plan.color, ...cardStyle }}
                   >
                     <div
                       className={styles.header}
-                      style={{ background: headerGradient }} // Apply unique gradient to header
+                      style={{ background: headerGradient }}
                     >
                       <div className={styles.tierShape}></div>
-                      <h3 style={headerStyle}>{plan.tier}</h3> {/* Apply headerStyle here */}
-                    </div><br/>
-                    <div 
-                      className={styles.body} 
-                      style={{ background: gradient }} // Apply unique gradient
-                    >
-                      <p style={{ fontSize: "20px", fontWeight: "bold" }}>{plan.price}</p> {/* Increase size and weight of price */}
+                      <h3 style={headerStyle}>{plan.tier}</h3>
+                    </div><br />
+                    <div className={styles.body} style={{ background: gradient }}>
+                      <p style={{ fontSize: "20px", fontWeight: "bold" }}>{plan.price}</p>
+                      
+                      {/* Render Teachers */}
                       <h6>TEACHERS</h6>
-                      <ul>
-                        {plan.teachers.map((item, i) => (
-                          <li key={i} className={i % 2 === 0 ? styles.tick : styles.cross}>
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
+                      <ul className={styles.featureList}>
+  {plan.teachers.map((teacher, index) => (
+    <li key={index} className={styles.featureItem}>
+      {teacher.status === "tick" && (
+        <span className={styles.tick}>&#10003;</span>
+      )}
+      {teacher.status === "wrong" && (
+        <span className={styles.cross}>&#10005;</span>
+      )}
+      <span>{teacher.name}</span>
+    </li>
+  ))}
+</ul>
+
+
+                      {/* Render Academics */}
                       <h6>ACADEMICS</h6>
-                      <ul>
-                        {plan.academics.map((item, i) => (
-                          <li key={i} className={i % 2 === 0 ? styles.tick : styles.cross}>
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                      <h6>TOOLS & LEARNING MATERIAL</h6>
-                      <ul>
-                        {plan.portalAccess.map((item, i) => (
-                          <li key={i} className={i % 2 === 0 ? styles.tick : styles.cross}>
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                      <h6>SCHEDULING</h6>
-                      <ul>
-                        {plan.scheduling.map((item, i) => (
-                          <li key={i} className={i % 2 === 0 ? styles.tick : styles.cross}>
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
+                      <ul className={styles.featureList}>
+  {plan.academics.map((academic, index) => (
+    <li key={index} className={styles.featureItem}>
+      {academic.status === "tick" && (
+        <span className={styles.tick}>&#10003;</span>
+      )}
+      {academic.status === "wrong" && (
+        <span className={styles.cross}>&#10005;</span>
+      )}
+      <span>{academic.name}</span>
+    </li>
+  ))}
+</ul>
+
+
+                      {/* Render Portal Access */}
+                      <h6>PORTAL ACCESS</h6>
+
+<ul className={styles.featureList}>
+  {plan.portalAccess.map((portalAccess, index) => (
+    <li key={index} className={styles.featureItem}>
+      {portalAccess.status === "tick" && (
+        <span className={styles.tick}>&#10003;</span>
+      )}
+      {portalAccess.status === "wrong" && (
+        <span className={styles.cross}>&#10005;</span>
+      )}
+      <span>{portalAccess.name}</span>
+    </li>
+  ))}
+</ul>
+
+
+
+                      {/* Render Scheduling */}
+                      <h6>LESSON SCHEDULING</h6>
+              
+                      <ul className={styles.featureList}>
+  {plan.scheduling.map((scheduling, index) => (
+    <li key={index} className={styles.featureItem}>
+      {scheduling.status === "tick" && (
+        <span className={styles.tick}>&#10003;</span>
+      )}
+      {scheduling.status === "wrong" && (
+        <span className={styles.cross}>&#10005;</span>
+      )}
+      <span>{scheduling.name}</span>
+    </li>
+  ))}
+</ul>
+
+                      {/* Render Discounts */}
                       <h6>DISCOUNTS</h6>
-                      <p>{plan.discounts}</p>
+                    
+                      <ul className={styles.featureList}>
+  {plan.discounts.map((discount, index) => (
+    <li key={index} className={styles.featureItem}>
+      {discount.status === "tick" && (
+        <span className={styles.tick}>&#10003;</span>
+      )}
+      {discount.status === "wrong" && (
+        <span className={styles.cross}>&#10005;</span>
+      )}
+      <span>{discount.name}</span>
+    </li>
+  ))}
+</ul>
                     </div>
                   </div>
                 </div>

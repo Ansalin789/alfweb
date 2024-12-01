@@ -5,9 +5,23 @@
   background: #f9f9f9;
   transition: transform 0.3s;
   transform: scale(1.00);
+  display: flex;
+  flex-direction: column; /* Ensure content stacks vertically */
+  min-height: 100%; /* Fill the available height */
 }
 
+.row {
+  display: flex;
+  flex-wrap: wrap; /* Ensure cards wrap to the next row if needed */
+  justify-content: space-between; /* Adjust spacing between cards */
+} 
 
+.col-lg-3,
+.col-md-6 {
+  display: flex;
+  flex: 1 1 calc(25% - 20px); /* Equal width for 4 columns */
+  margin-bottom: 20px;
+}
 
 .header {
   position: relative;
@@ -51,7 +65,8 @@
 }
 
 .body {
-  padding: 20px;
+  flex-grow: 1; /* Make the body section take up remaining space */
+  /* padding: 20px; */
   background: #fff;
   text-align: left;
 }
@@ -61,58 +76,111 @@
   background-color: #f2f2f2;
   border: 1px solid #ddd;
   padding: 5px 10px;
-  border-radius: 15px;
+  border-radius: 20px;
   font-weight: bold;
   color: #333;
   margin: 15px auto;
   text-align: center;
-  width: fit-content; 
-  /* letter-spacing: 2px; */
+  width: fit-content;
   font-size: 15px;
 }
 
 .body ul {
-  list-style: none;
-  padding: 0;
-  margin: 10px 0; 
-  text-align: center;
+  list-style: none; 
   font-size: 14px;
+  padding: 0;
+  margin: 10px 0;
+  display: flex; /* Make the items align in one line */
+  flex-wrap: wrap; /* Allow wrapping to the next line if needed */
+  gap: 10px; /* Add space between items */
+  text-align: left;
 }
 
 .body ul li {
   position: relative; /* Ensure the pseudo-elements are positioned correctly */
-  padding-left: 30px; /* Space for the tick or cross */
-  color:#ffff;
-}
+  padding-left: 30px; 
+  color:#ffff; 
+} 
 
+
+/* Icon container */
 .body ul li::before {
-  content: ""; /* Default content */
-  position: absolute;
-  left: 0; /* Position it to the left */
-  top: 0; /* Align it vertically */
-  width: 16px; /* Width of the circle */
-  height: 16px; /* Height of the circle */
-  border-radius: 50%; /* Make it circular */
-  display: flex; /* Flexbox for centering */
-  align-items: center; /* Center vertically */
-  justify-content: center; /* Center horizontally */
-  border: 2px solid #fff; /* White border for contrast */
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  content: ""; /* Placeholder for tick or cross */
+  position: absolute; /* Position icon relative to list item */
+  left: 0; 
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Adjust for vertical alignment */
+  width: 16px; /* Icon width */
+  height: 16px; /* Icon height */
+  display: flex; /* Center content within the container */
+  align-items: center; /* Vertical alignment */
+  justify-content: center; /* Horizontal alignment */
+  border-radius: 50%; /* Round shape for the icon background */
+  font-size: 12px; /* Icon font size */
 }
 
+/* PricingTable.module.css */
+
+/* PricingTable.module.css */
+
+.tick {
+  display: inline-flex; /* Ensures proper alignment with text */
+  justify-content: center; /* Centers the symbol */
+  align-items: center; /* Centers the symbol */
+  color: #fff; /* White tick mark */
+  background-color: #4caf50; /* Green background */
+  border-radius: 50%; /* Circular shape */
+  width: 15px; /* Adjust icon width */
+  height: 15px; /* Adjust icon height */
+  margin-right: 10px; /* Space between the icon and text */
+  font-size: 10px; /* Font size of the tick */
+  font-weight: bold; /* Makes the tick mark more visible */ 
+
+}
+
+.cross {
+  display: inline-flex; /* Ensures proper alignment with text */
+  justify-content: center; /* Centers the symbol */
+  align-items: center; /* Centers the symbol */
+  color: #fff; /* White cross mark */
+  background-color: #f44336; /* Red background */
+  border-radius: 50%; /* Circular shape */
+  width: 15px; /* Adjust icon width */
+  height: 15px; /* Adjust icon height */
+  margin-right: 10px; /* Space between the icon and text */
+  font-size: 10px; /* Font size of the cross */
+  font-weight: bold; /* Makes the cross mark more visible */
+}
+
+
+
+.hidden {
+  display: none;
+}
+
+
+/* Tick icon styling */
 .body ul li.tick::before {
-  content: "✔"; /* Unicode for tick mark */
-  color: #fff; /* Change color of the tick to white for contrast */
-  background-color: #4CAF50; /* Change background color for the circle */
-  font-size: 10px;
+  content: "✔"; /* Tick symbol */
+  color: #fff; /* Icon color */
+  background-color: #4caf50; /* Green background */
+  border-radius: 50%; /* Optional: to make the icon circular */
+  padding: 3px; /* Optional: space around the icon */
+  margin-right: 10px; /* Space between the icon and text */
+  font-size: 14px; /* Adjust icon size */
 }
 
+/* Cross icon styling */
 .body ul li.cross::before {
-  content: "✖"; /* Unicode for cross mark */
-  color: #fff; /* Change color of the cross to white for contrast */
-  background-color: #f44336; /* Change background color for the circle */
-  font-size: 10px;
+  content: "✖"; /* Cross symbol */
+  color: #fff; /* Icon color */
+  background-color: #f44336; /* Red background */
+  border-radius: 50%; /* Optional: to make the icon circular */
+  padding: 3px; /* Optional: space around the icon */
+  margin-right: 10px; /* Space between the icon and text */
+  font-size: 14px; /* Adjust icon size */
 }
+
 
 .body p {
   font-size: 14px;

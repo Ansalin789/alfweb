@@ -164,7 +164,7 @@ const About = () => {
                   <Tab.Content className="tab_content">
                     <Tab.Pane eventKey={"t1"} className="tabs_item">
                       <img
-                        src="assets/img/Misions.png"
+                        src="assets/img/mission1.png"
                         alt="business image"
                       />
                       <ul className="tabs-inner-list">
@@ -192,7 +192,7 @@ const About = () => {
                     </Tab.Pane>{" "}
                     {/* / tabs_item */}
                     <Tab.Pane eventKey={"t2"} className="tabs_item">
-                      <img src="assets/img/vissions.png"   alt="Image"  />
+                      <img src="assets/img/vission2.png"   alt="Image"  />
                       <ul className="tabs-inner-list">
                         <li>
                           <i className="fas fa-check" />
@@ -665,7 +665,7 @@ const About = () => {
       <div
       className="faq-area new-style"
       style={{
-        backgroundImage: "url(../images/resource/faq-bg2.jpg)",
+        backgroundImage: "url(../images/resource/FAQ.png)",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center center",
@@ -673,7 +673,11 @@ const About = () => {
     >
       <div className="container">
         <div className="row">
-          <div className="col-lg-6" />
+          <div className="col-lg-6" > 
+          <div className="ff" > 
+          <img src="assets/images/resource/faq6.png" alt="image" />
+          </div>
+          </div>
           <div className="col-lg-6">
             {/* Start Accordion */}
             <div className="tab_container">
