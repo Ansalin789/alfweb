@@ -13,7 +13,7 @@ const Footer = () => {
             <li><a href="about">About</a></li>
             <li><a href="blog">Blog</a></li>
             <li><a href="testimonials">Testimonials</a></li>
-            <li><a href="#">Careers</a></li>
+            <li><a href="career">Careers</a></li>
             <li><a href="freek">FAQs</a></li>
             <li><a href="#">Contact Us</a></li>
           </ul>
@@ -50,7 +50,7 @@ const Footer = () => {
           <br/>
           
           <div>
-          <a href="#"><Image src="/assets/img/logo-white.png" alt="" width={70} height={80} style={{ marginLeft: '110px' }} /></a>
+          <a href="#"><Image src="/assets/img/logo-white.png" alt="" width={70} height={90} style={{ marginLeft: '110px' }} /></a>
           <p style={{paddingLeft:'66px',fontSize:'12px'}}>© Furqan Academy LTD</p>
           <p style={{paddingRight:'20px',fontSize:'12px'}}>128,City Road,London,ECIV 2NX,United Kingdom</p>
           </div>

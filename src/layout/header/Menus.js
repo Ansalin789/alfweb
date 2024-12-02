@@ -42,7 +42,7 @@ export const DaskTopMenusMenus = () => {
             <li><Link href="/team">Teachers</Link></li>
             <li><Link href="/testimonial">Testimonials</Link></li>
             <li><Link href="/career">Career</Link></li>
-            <li><Link href="/faq">FAQ</Link></li>
+            <li><Link href="/freek">FAQ</Link></li>
             <li><Link href="/contact">Contact Us</Link></li>
           </ul>
         )}

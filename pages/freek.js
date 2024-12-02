@@ -1,5 +1,7 @@
 import React from "react";
-import Link from 'next/link';
+import Link from 'next/link'; 
+import Layout from "@/src/layout/Layout";
+import Breadcumb from "@/src/components/Breadcumb";
 import styles from './freek.module.css';
 
 const categories = [
@@ -22,7 +24,10 @@ const categories = [
 ];
 
 const Freek = () => {
-  return (
+  return ( 
+    <Layout> 
+            <Breadcumb pageName={"FAQ"} />
+
     <div className={styles.container}>
       {/* Header Section */}
       <div className={styles.header}>
@@ -63,7 +68,8 @@ const Freek = () => {
           </Link>
         ))}
       </div>
-    </div>
+    </div> 
+    </Layout>
   );
 };
 

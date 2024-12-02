@@ -2764,14 +2764,14 @@ p.about-text1 {
   background: url(../images/resource/why-choose-bg.png);
 }
 
-.upper1.style-three.about-area .dreamit-about-thumb {
+/* .upper1.style-three.about-area .dreamit-about-thumb {
   margin: 0px 0 0 30px;
-} 
+}  */
 
 
 .upper1.style-three .about-shape-thumb3 {
   position: absolute;
-  right: -68px;
+  right: -8px;
   top: -4px;
   z-index: -1;
 }

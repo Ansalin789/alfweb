@@ -147,7 +147,7 @@ const Index = () => {
                     <div className="feature-text">
                     <p style={{color:'black'}}>
                       {" "}
-                      We offer kids and adults to memorize the whole or part of the Holy Quran with a structured program.{" "}
+                      Quranic studies is the academic application of a diverse set of disciplines to study the Quran. {" "}
                     </p>
                   </div>
                   </div>
@@ -196,7 +196,7 @@ const Index = () => {
                     <div className="feature-text110">
                     <p style={{color:'black'}}>
                       {" "}
-                      We offer kids and adults to memorize the whole or part of the Holy Quran with a structured program.{" "}
+                      Arabic courses can teach you the basics of the language, including the alphabet, vocabulary, and culture.{" "}
                     </p>
                   </div>
                   </div>
@@ -245,7 +245,7 @@ const Index = () => {
                     <div className="feature-text111">
                     <p style={{color:'black'}}>
                       {" "}
-                      We offer kids and adults to memorize the whole or part of the Holy Quran with a structured program.{" "}
+                      Islamic studies is an academic discipline that examines the past and future of Islam and the Islamic world.{" "}
                     </p>
                   </div>
                   </div>

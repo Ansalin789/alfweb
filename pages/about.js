@@ -164,7 +164,7 @@ const About = () => {
                   <Tab.Content className="tab_content">
                     <Tab.Pane eventKey={"t1"} className="tabs_item">
                       <img
-                        src="assets/img/mission1.png"
+                        src="assets/img/missi1.png"
                         alt="business image"
                       />
                       <ul className="tabs-inner-list">
@@ -192,7 +192,7 @@ const About = () => {
                     </Tab.Pane>{" "}
                     {/* / tabs_item */}
                     <Tab.Pane eventKey={"t2"} className="tabs_item">
-                      <img src="assets/img/vission2.png"   alt="Image"  />
+                      <img src="assets/img/miss2.png"   alt="Image"  />
                       <ul className="tabs-inner-list">
                         <li>
                           <i className="fas fa-check" />
@@ -674,9 +674,16 @@ const About = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-6" > 
-          <div className="ff" > 
-          <img src="assets/images/resource/faq6.png" alt="image" />
-          </div>
+          <div
+  className="ff"
+  style={{
+    marginTop: "65px",
+    marginLeft: "-70px",
+  }}
+>
+  <img src="assets/images/resource/faq11.png" alt="image" />
+</div>
+
           </div>
           <div className="col-lg-6">
             {/* Start Accordion */}
@@ -700,6 +707,7 @@ const About = () => {
               >
                 <ul>
                   <li>
+                  <Link legacyBehavior href="/freek">
                     <a
                       href="#"
                       style={{
@@ -714,7 +722,7 @@ const About = () => {
                     >
                       More Faqs
                     </a>
-                   
+                   </Link>
                   </li>
                   {/* Add more FAQ items as needed */}
                 </ul>

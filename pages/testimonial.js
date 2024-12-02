@@ -104,11 +104,11 @@ const Testimonial = () => {
 
   <div className="bottom-images">
 
-    <Image src="/assets/img/cos1.jpg" alt="Bottom Image 1" width={420} height={420} className="rounded" style={{    marginLeft:'-6px'}} />
-    <Image src="/assets/img/cos3.jpg" alt="Bottom Image 2" width={420} height={420} className="rounded" style={{marginLeft:'306px'}} />
+    <Image src="/assets/img/cross1.png" alt="Bottom Image 1" width={320} height={320}  style={{    marginLeft:'-6px'}} />
+    <Image src="/assets/img/cross3.png" alt="Bottom Image 2" width={320} height={320}  style={{marginLeft:'306px'}} />
   </div>
     <div className="center-image">
-    <Image src="/assets/img/cos2.jpg" alt="Center Image" width={520} height={520} className="rounded" style={{marginLeft:'5px'}} />
+    <Image src="/assets/img/cross2.png" alt="Center Image" width={320} height={320}  style={{marginLeft:'5px'}} />
   </div>
 </div>
 
