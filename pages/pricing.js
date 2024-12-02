@@ -32,8 +32,8 @@ const Pricing = () => {
       ],
       discounts: [
         { name: "10% Discount for Family", status: "tick" }
-      ],    
-      color: "#ff0000" // Example color for ELITE tier
+      ],
+      gradient: "linear-gradient(to bottom, #ff0000, #ff7e5f)" // ELITE Gradient
     },
     {
       tier: "PREMIUM",
@@ -56,13 +56,12 @@ const Pricing = () => {
         { name: "Welcome Package", status: "wrong" },
         { name: "Video Recordings", status: "wrong" }
       ],
-      
       scheduling: [
         { name: "Up to 4 Lesson Reschedules Per Month", status: "tick" },
         { name: "Up to 1 Lesson Cancellation Per Month", status: "tick" }
       ],
       discounts: [{ name: "5% Family Discount", status: "tick" }],
-      color: "#cc0000" // Example color for Premium tier
+      gradient: "linear-gradient(to bottom, #00008B, #1E90FF)" // PREMIUM Gradient
     },
     {
       tier: "STANDARD",
@@ -90,7 +89,7 @@ const Pricing = () => {
         { name: "Lesson Cancellations", status: "wrong" }
       ],
       discounts: [{ name: "Family Discount", status: "tick" }],
-      color: "#C0C0C0" // Example color for Standard tier
+      gradient: "linear-gradient(to bottom, #C0C0C0, #A9A9A9)" // STANDARD Gradient
     },
     {
       tier: "BASIC",
@@ -118,9 +117,10 @@ const Pricing = () => {
         { name: "Lesson Cancellations", status: "wrong" }
       ],
       discounts: [{ name: "Family Discount", status: "wrong" }],
-      color: "#999999" // Example color for Basic tier
+      gradient: "linear-gradient(to bottom, #FFD700, #FFC300)" // BASIC Gradient
     }
   ];
+  
 
 const renderStatusWithIcon = (status, text) => {
   const icon = status === "tick" 
@@ -135,10 +135,6 @@ const renderStatusWithIcon = (status, text) => {
     </p>
   );
 };
-
-  
-
-  
 
   return (
     <Layout>

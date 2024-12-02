@@ -96,6 +96,21 @@
   text-align: left;
 }
 
+/* .tierImage{
+  margin-right: 200px;
+} */
+
+.cardImageWrapper {
+  text-align: center;
+}
+
+.cardImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+
 .body ul li {
   position: relative; /* Ensure the pseudo-elements are positioned correctly */
   padding-left: 30px; 

@@ -118,7 +118,7 @@ const Contact = () => {
       {/*==================================================*/}
       {/* Start Contact Location Section */}
       {/*===================================================*/}
-      <div className="map-section">
+      {/* <div className="map-section">
         <div className="container-fluid">
           <div className="row">
             <div className="col-lg-12 p-0">
@@ -136,7 +136,7 @@ const Contact = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </Layout>
   );
 };

@@ -7118,8 +7118,6 @@ ul.tabs-inner-list li i {
   color:whitesmoke;
 }
 
-
-
 h3 {
   font-size: 24px;
   color: #333;
@@ -7127,7 +7125,7 @@ h3 {
 }
 
 p {
-  color: #555;
+  color: #fff;
   margin: 0;
 }
 
@@ -7409,6 +7407,7 @@ p {
 .cda-content-area {
   background: #10102e;
   padding: 21px 0;
+  height: 100%;
 }
 
 .cda-single-content {

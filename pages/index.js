@@ -901,8 +901,6 @@ const Index = () => {
   </div>
 </div>
 
-
-
 <div data-aos="fade-up" >
   <div className="back" style={{height: '755px' }}>
     
