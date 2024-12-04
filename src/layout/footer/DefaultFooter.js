@@ -59,7 +59,19 @@ const Footer = () => {
         {/* Right Column */}
         <div className={styles.footerSection} style={{paddingLeft:'70px'}}>
           <h3 style={{paddingLeft:'110px'}}>LET'S STAY IN TOUCH</h3>
-          <input type="email"  className={styles.emailInput} style={{marginLeft: '48px'}} placeholder="Type your Email Address" />&nbsp;
+          <input
+  type="email"
+  className={styles.emailInput}
+  style={{
+    marginLeft: '58px',
+    '::placeholder': {
+      fontSize: '12px',
+      color: '#aaa',
+    },
+  }}
+  placeholder="Type your Email Address"
+/>
+
           <button className={styles.btn}>Submit</button>
           <h3 style={{marginTop:'60px',paddingLeft:'120px'}}>Download Our App</h3>
           <div className={styles.appLinks}>

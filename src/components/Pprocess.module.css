@@ -92,7 +92,8 @@
 
 .ctaButton:hover {
   background-color: #e5533c;
-}
+}  
+
 
 @media (max-width: 768px) {
   .step {

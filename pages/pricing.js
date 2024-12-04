@@ -120,21 +120,20 @@ const Pricing = () => {
       gradient: "linear-gradient(to bottom, #FFD700, #FFC300)" // BASIC Gradient
     }
   ];
-  
 
-const renderStatusWithIcon = (status, text) => {
-  const icon = status === "tick" 
-    ? <span className={`${styles.tick}`}>&#10003;</span> 
-    : status === "wrong" 
-    ? <span className={`${styles.cross}`}>&#10005;</span> 
-    : null;
+  const renderStatusWithIcon = (status, text) => {
+    const icon = status === "tick" 
+      ? <span className={`${styles.tick}`}>&#10003;</span> 
+      : status === "wrong" 
+      ? <span className={`${styles.cross}`}>&#10005;</span> 
+      : null;
 
-  return (
-    <p className={styles.featureItem}>
-      {icon} <span>{text}</span>
-    </p>
-  );
-};
+    return (
+      <p className={styles.featureItem}>
+        {icon} <span>{text}</span>
+      </p>
+    );
+  };
 
   return (
     <Layout>
@@ -150,128 +149,132 @@ const renderStatusWithIcon = (status, text) => {
 
               switch (plan.tier) {
                 case "ELITE":
-                  gradient = "linear-gradient(to bottom, #ff0000, #ff7e5f)"; // Red to coral
-                  headerGradient = "linear-gradient(to right, #ff0000, #ff7e5f)"; // Red to coral
+                  gradient = "linear-gradient(to bottom,#F85F73,black)"; // Red to coral
+                  headerGradient = "linear-gradient(to right, #F85F73, black)"; // Red to coral
                   break;
                 case "PREMIUM":
-                  gradient = "linear-gradient(to bottom, #00008B, #1E90FF)"; // Dark blue to dodger blue
-                  headerGradient = "linear-gradient(to right, #00008B, #1E90FF)"; // Dark blue to dodger blue
+                  gradient = "linear-gradient(to bottom, #928A97,black)"; // Dark blue to dodger blue
+                  headerGradient = "linear-gradient(to right, #928A97, black)"; // Dark blue to dodger blue
                   break;
                 case "STANDARD":
-                  gradient = "linear-gradient(to bottom, #C0C0C0, #A9A9A9)"; // Silver to dark gray
-                  headerGradient = "linear-gradient(to right, #C0C0C0, #A9A9A9)"; // Silver to dark gray
+                  gradient = "linear-gradient(to bottom, rgb(43 107 230),black)"; // Silver to dark gray
+                  headerGradient = "linear-gradient(to right, rgb(43 107 230), black)"; // Silver to dark gray
                   break;
                 case "BASIC":
-                  gradient = "linear-gradient(to bottom, #FFD700, #FFC300)"; // Gold to a lighter gold
-                  headerGradient = "linear-gradient(to right, #FFD700, #FFC300)"; // Gold to a lighter gold
+                  gradient = "linear-gradient(to bottom, rgb(245 202 71),black)"; // Gold to a lighter gold
+                  headerGradient = "linear-gradient(to right, rgb(245 202 71), black)"; // Gold to a lighter gold
                   break;
                 default:
-                  gradient = "linear-gradient(to bottom, #fff, #eee)"; // Fallback gradient
+                  gradient = "linear-gradient(to bottom, black, #eee)"; // Fallback gradient
                   headerGradient = "linear-gradient(to right, #fff, #eee)"; // Fallback gradient
               }
 
               return (
-                <div key={index} className="col-lg-3 col-md-6" style={{ marginBottom: "20px" }}>
+                <div key={index} className="col-lg-3 col-md-6" style={{ marginBottom: "20px", position: "relative" }}>
+                  {/* Conditional rendering for the small box above pricing card for ELITE and PREMIUM */}
+                  {["ELITE", "PREMIUM"].includes(plan.tier) && (
+                    <div className={styles.smallBox}>
+                      <p className={styles.small}>{plan.tier === "ELITE" ? "Elite" : "elite"}</p>
+                    </div>
+                  )}
+
+                  {/* Conditional rendering for the ELITE image */}
+                  {plan.tier === "ELITE" && (
+                    <img src="/assets/img/elite.png" alt="Elite Plan" className={styles.eliteImageOutside} />
+                  )}
+
+                  {/* Pricing Card */}
                   <div
                     className={styles.pricingCard}
                     style={{ borderColor: plan.color, ...cardStyle }}
                   >
-                    <div
-                      className={styles.header}
-                      style={{ background: headerGradient }}
-                    >
+                    <div className={styles.header} style={{ background: headerGradient }}>
                       <div className={styles.tierShape}></div>
-                      <h3 style={headerStyle}>{plan.tier}</h3>
-                    </div><br />
+                      {plan.tier !== "ELITE" && <h3 style={headerStyle}>{plan.tier}</h3>}
+                    </div>
+                    <br />
                     <div className={styles.body} style={{ background: gradient }}>
                       <p style={{ fontSize: "20px", fontWeight: "bold" }}>{plan.price}</p>
-                      
+
                       {/* Render Teachers */}
                       <h6>TEACHERS</h6>
                       <ul className={styles.featureList}>
-  {plan.teachers.map((teacher, index) => (
-    <li key={index} className={styles.featureItem}>
-      {teacher.status === "tick" && (
-        <span className={styles.tick}>&#10003;</span>
-      )}
-      {teacher.status === "wrong" && (
-        <span className={styles.cross}>&#10005;</span>
-      )}
-      <span>{teacher.name}</span>
-    </li>
-  ))}
-</ul>
+                        {plan.teachers.map((teacher, index) => (
+                          <li key={index} className={styles.featureItem}>
+                            {teacher.status === "tick" && (
+                              <span className={styles.tick}>&#10003;</span>
+                            )}
+                            {teacher.status === "wrong" && (
+                              <span className={styles.cross}>&#10005;</span>
+                            )}
+                            <span>{teacher.name}</span>
+                          </li>
+                        ))}
+                      </ul>
 
-
-                      {/* Render Academics */}
-                      <h6>ACADEMICS</h6>
+                       {/* Render Academics */}
+                       <h6>ACADEMICS</h6>
                       <ul className={styles.featureList}>
-  {plan.academics.map((academic, index) => (
-    <li key={index} className={styles.featureItem}>
-      {academic.status === "tick" && (
-        <span className={styles.tick}>&#10003;</span>
-      )}
-      {academic.status === "wrong" && (
-        <span className={styles.cross}>&#10005;</span>
-      )}
-      <span>{academic.name}</span>
-    </li>
-  ))}
-</ul>
-
-
+                        {plan.academics.map((academic, index) => (
+                          <li key={index} className={styles.featureItem}>
+                            {academic.status === "tick" && (
+                              <span className={styles.tick}>&#10003;</span>
+                            )}
+                            {academic.status === "wrong" && (
+                              <span className={styles.cross}>&#10005;</span>
+                            )}
+                            <span>{academic.name}</span>
+                          </li>
+                        ))}
+                      </ul>
+              
                       {/* Render Portal Access */}
                       <h6>PORTAL ACCESS</h6>
-
-<ul className={styles.featureList}>
-  {plan.portalAccess.map((portalAccess, index) => (
-    <li key={index} className={styles.featureItem}>
-      {portalAccess.status === "tick" && (
-        <span className={styles.tick}>&#10003;</span>
-      )}
-      {portalAccess.status === "wrong" && (
-        <span className={styles.cross}>&#10005;</span>
-      )}
-      <span>{portalAccess.name}</span>
-    </li>
-  ))}
-</ul>
-
-
-
+                      <ul className={styles.featureList}>
+                        {plan.portalAccess.map((portalAccess, index) => (
+                          <li key={index} className={styles.featureItem}>
+                            {portalAccess.status === "tick" && (
+                              <span className={styles.tick}>&#10003;</span>
+                            )}
+                            {portalAccess.status === "wrong" && (
+                              <span className={styles.cross}>&#10005;</span>
+                            )}
+                            <span>{portalAccess.name}</span>
+                          </li>
+                        ))}
+                      </ul>
+              
                       {/* Render Scheduling */}
                       <h6>LESSON SCHEDULING</h6>
-              
                       <ul className={styles.featureList}>
-  {plan.scheduling.map((scheduling, index) => (
-    <li key={index} className={styles.featureItem}>
-      {scheduling.status === "tick" && (
-        <span className={styles.tick}>&#10003;</span>
-      )}
-      {scheduling.status === "wrong" && (
-        <span className={styles.cross}>&#10005;</span>
-      )}
-      <span>{scheduling.name}</span>
-    </li>
-  ))}
-</ul>
-
+                        {plan.scheduling.map((scheduling, index) => (
+                          <li key={index} className={styles.featureItem}>
+                            {scheduling.status === "tick" && (
+                              <span className={styles.tick}>&#10003;</span>
+                            )}
+                            {scheduling.status === "wrong" && (
+                              <span className={styles.cross}>&#10005;</span>
+                            )}
+                            <span>{scheduling.name}</span>
+                          </li>
+                        ))}
+                      </ul>
+              
                       {/* Render Discounts */}
                       <h6>DISCOUNTS</h6>
-                    
                       <ul className={styles.featureList}>
-  {plan.discounts.map((discount, index) => (
-    <li key={index} className={styles.featureItem}>
-      {discount.status === "tick" && (
-        <span className={styles.tick}>&#10003;</span>
-      )}
-      {discount.status === "wrong" && (
-        <span className={styles.cross}>&#10005;</span>
-      )}
-      <span>{discount.name}</span>
-    </li>
-  ))}
-</ul>
+                        {plan.discounts.map((discount, index) => (
+                          <li key={index} className={styles.featureItem}>
+                            {discount.status === "tick" && (
+                              <span className={styles.tick}>&#10003;</span>
+                            )}
+                            {discount.status === "wrong" && (
+                              <span className={styles.cross}>&#10005;</span>
+                            )}
+                            <span>{discount.name}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
                 </div>

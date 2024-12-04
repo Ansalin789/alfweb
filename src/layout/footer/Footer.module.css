@@ -35,6 +35,11 @@
   margin-bottom: 8px;
   display: block;
 }
+.emailInput::placeholder {
+  font-size: 12px; /* Adjust the size as needed */
+  color: #3b3737; /* Optional: Customize placeholder color */
+  padding-left: 15px;
+}
 
 
 
@@ -126,6 +131,7 @@
   color: white;
   border: none;
   border-radius: 5px;
+  margin-left: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
