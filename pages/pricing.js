@@ -6,7 +6,7 @@ import styles from "./PricingTable.module.css"; // Adjust path if necessary
 const Pricing = () => {
   const pricingPlans = [
     {
-      tier: "RECOMENDED",
+      tier: "Recommended",
       price: "$16 / Hour",
       teachers: [
         { name: "Proficient Arabic (Native) Teacher", status: "tick" },
@@ -36,7 +36,7 @@ const Pricing = () => {
       gradient: "linear-gradient(to bottom, #ff0000, #ff7e5f)" // ELITE Gradient
     },
     {
-      tier: "PREFERRED",
+      tier: "Preferred",
       price: "$11 / Hour",
       teachers: [
         { name: "Proficient Arabic (Native) Teacher", status: "tick" },
