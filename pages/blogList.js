@@ -12,6 +12,7 @@ const BlogList = () => {
       throw new Error('Network response was not ok');
     }
     const data = await response.json();
+    console.log("data>>>",data);
     setBlogs(data.blogs || data);
   };
 
@@ -58,7 +59,7 @@ const BlogList = () => {
               <td>
                 {/* Display the image if the blog has an image URL */}
                 {blog.image ? (
-                  <img src={blog.image} alt={blog.title} style={{ width: '100px', height: 'auto' }} />
+                  <img src={blog.image} style={{ width: '100px', height: 'auto' }} />
                 ) : (
                   <span>No image available</span>
                 )}

@@ -10,25 +10,108 @@
   min-height: 100%; /* Fill the available height */
 }   
 
+/* Small box styling */
 .smallBox {
-  background-color: #141413ef; /* Bold Crimson */
- color: #020b16;
-  padding: 10px 116px 10px 116px;
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 10px;
-  border-radius: 5px;
+  padding: 8px 86px;
   position: absolute;
-  top: -43px;
+  top: -55px;
   left: 50%;
   transform: translateX(-50%);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+  border-radius: 15px; /* Rounded corners */
+  text-align: center;
+
+  border: 2px solid transparent;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+  color: white;
+  transition: transform 0.3s ease, background 0.5s ease; /* Smooth transition for hover effects */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: pulse 2s infinite; /* Pulsing animation */
 }
-.small{
-  color: #f6f7f9;
+
+/* Pulsing animation */
+@keyframes pulse {
+  0% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.1); /* Slightly enlarge */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3); /* Increase shadow intensity */
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Add the arrow inside the smallBox */
+.smallBox::after {
+  content: '';
+  position: absolute;
+  bottom: -10px; /* Position the arrow below the box */
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid rgb(16, 16, 16); /* Arrow color */
+  transition: border-top-color 0.3s ease;
+}
+
+/* Hover effect */
+.smallBox:hover {
+  animation: glow 0.6s infinite alternate; /* Glow animation on hover */
+  background: linear-gradient(90deg, #e74c3c, #f1c40f); /* Change gradient on hover */
+}
+
+/* Glow animation */
+@keyframes glow {
+  from {
+    box-shadow: 0px 8px 16px rgba(255, 223, 186, 0.6);
+  }
+  to {
+    box-shadow: 0px 12px 24px rgba(255, 152, 0, 0.8);
+  }
+}
+
+/* Hover effect for the arrow */
+.smallBox:hover::after {
+  border-top-color: #f1c40f; /* Change arrow color */
 }
 
 
+/* ELITE style */
+.eliteBox {
+  border-color: #ff5733; /* Warm orange border */
+  /* background-color: #f44336; */
+}
+
+.eliteText {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ff5733; /* Matching text color */
+  letter-spacing: 1px;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+/* PREMIUM style */
+.premiumBox {
+  border-color: #2980b9; /* Cool blue border */
+}
+
+.premiumText {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2980b9; /* Matching text color */
+  letter-spacing: 1px;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+
+.hiddenText {
+  display: none;
+}
 .row {
   display: flex;
   flex-wrap: wrap; /* Ensure cards wrap to the next row if needed */
@@ -51,17 +134,47 @@
 
 .eliteImageOutside {
   position: absolute;
-  left: -60px;
-  top: 16px;
-  width: 180px;
+  left: -103px;
+  top: -96px;
+  width: 300px;
   height: auto;
   margin-left: 48px;
   object-fit: contain;
   z-index: 1;
 }
 
+.premiumImageOutside{
+  position: absolute;
+  left: -85px;
+  top: -114px;
+  width: 300px;
+  height: auto;
+  margin-left: 48px;
+  object-fit: contain;
+  z-index: 1;
+}
 
+.standardImageOutside{
+  position: absolute;
+  left: -91px;
+  top: -80px;
+  width: 300px;
+  height: auto;
+  margin-left: 48px;
+  object-fit: contain;
+  z-index: 1;
+}
 
+.basicImageOutside{
+ position: absolute;
+    left: -84px;
+    top: -61px;
+    width: 300px;
+    height: auto;
+    margin-left: 48px;
+    object-fit: contain;
+    z-index: 1;
+}
 
 /* .header h3 {
   margin: 0;
@@ -70,10 +183,10 @@
 }  */
 .header h3 {
   position: absolute;
-  bottom: -10px;
-  left: -2px;
-  background-color: #020b16;
-  color: #fff;
+  /* bottom: -10px; */
+  /* left: -2px; */
+  /* background-color: #020b16; */
+  /* color: #fff; */
   padding: 10px 30px;
   font-weight: bold;
   font-size: 0.9rem;
@@ -106,12 +219,12 @@
 
 .body h6 {
   display: block;
-  background-color: #f2f2f2;
+  background-color: #121111;
   border: 1px solid #ddd;
   padding: 5px 10px;
   border-radius: 20px;
   font-weight: bold;
-  color: #333;
+  color: #f7f3f3;
   margin: 15px auto;
   text-align: center;
   width: fit-content;
@@ -133,6 +246,8 @@
   margin-right: 200px;
 } */
 
+
+
 .cardImageWrapper {
   text-align: center;
 }
@@ -147,7 +262,7 @@
 .body ul li {
   position: relative; /* Ensure the pseudo-elements are positioned correctly */
   padding-left: 30px; 
-  color:#ffff; 
+  color:#101010; 
 } 
 
 
@@ -232,7 +347,7 @@
 
 .body p {
   font-size: 14px;
-  color: #ffffff; 
+  color: #121212; 
   margin: 5px 0 0;
   text-align: center;
   
@@ -240,4 +355,5 @@
 
 .pricingContainer {
   padding: 70px 0;
-}
+} 
+

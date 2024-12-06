@@ -4,32 +4,40 @@ import Layout from "@/src/layout/Layout";
 import { getPagination, pagination } from "@/src/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import styles from './blog-grid.module.css'; // Adjust the path if necessary
+
 const BlogGrid = () => {
-  let sort = 3;
-  const [active, setActive] = useState(1);
-  const [state, setstate] = useState([]);
-  useEffect(() => {
-    pagination(".single_box_", sort, active);
-    let list = document.querySelectorAll(".single_box_");
-    setstate(getPagination(list.length, sort));
-  }, [active]);
+  const [blogs, setBlogs] = useState([]); // State to store blogs fetched from the API
+  const [active, setActive] = useState(1); // Current active page for pagination
+  const [state, setState] = useState([]); // Pagination state
+  const sort = 3; // Number of blogs per page
 
-
-
+  // Fetch blogs from the API
   const fetchBlogs = async () => {
-    const endpoint = 'http://localhost:3000/api/blogs';
-    const response = await fetch(endpoint);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+    try {
+      const endpoint = "http://localhost:3000/api/blogs";
+      const response = await fetch(endpoint);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setBlogs(data.blogs || data);
+    } catch (error) {
+      console.error("Failed to fetch blogs:", error);
     }
-    const data = await response.json();
-    setBlogs(data.blogs || data);
   };
 
+  // Fetch blogs when the component mounts
   useEffect(() => {
     fetchBlogs();
   }, []);
 
+  // Handle pagination when active page changes
+  useEffect(() => {
+    const list = document.querySelectorAll(".single_box_");
+    setState(getPagination(list.length, sort));
+    pagination(".single_box_", sort, active);
+  }, [active, blogs]);
 
   return (
     <Layout>
@@ -37,240 +45,62 @@ const BlogGrid = () => {
       <div className="blog-area style-two page">
         <div className="container">
           <div className="row">
-            <div className="col-lg-4 col-md-6 single_box_">
-              <div className="single-blog-box">
-                <div className="single-blog-thumb">
-                  <img src={data.image} alt />
-                  <div className="blog-top-button">
-                    <a href="#">{data.title}</a>
-                  </div>
-                </div>
-                <div className="em-blog-content">
-                  <div className="meta-blog-text">
-                    <p> August 25, 2023 </p>
-                  </div>
-                  <div className="em-blog-title">
-                    <h2>
-                      {" "}
-                      <Link legacyBehavior href="/blog-details">
-                        <a> Popular Consultants are big Meetup 2023 </a>
-                      </Link>{" "}
-                    </h2>
-                  </div>
-                  <div className="em-blog-icon">
-                    <div className="em-blog-thumb">
-                      <img src="assets/images/resource/blog-icon.png" alt />
-                    </div>
-                    <div className="em-blog-icon-title">
-                      <h6> Alex Collins </h6>
+            {/* Render blogs */}
+            {blogs.slice((active - 1) * sort, active * sort).map((blog) => (
+              <div
+                key={blog.id}
+                className="col-lg-4 col-md-6 single_box_"
+                style={{ marginBottom: "20px" }}
+              >
+                <div className="single-blog-box">
+                  <div className="single-blog-thumb">
+                    {blog.image && (
+                      <img
+                        src={blog.image}
+                        alt={blog.title}
+                        style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                      />
+                    )}
+                    <div className="blog-top-button">
+                      <a href="#">{blog.title}</a>
                     </div>
                   </div>
-                  <div className="blog-button">
-                    <Link legacyBehavior href="/blog-details">
-                      <a>
-                        {" "}
-                        Learn More <i className="bi bi-plus" />{" "}
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6 single_box_">
-              <div className="single-blog-box">
-                <div className="single-blog-thumb">
-                  <img src="assets/images/resource/blog2.png" alt />
-                  <div className="blog-top-button">
-                    <a href="#"> DEVELOPMENT </a>
-                  </div>
-                </div>
-                <div className="em-blog-content">
-                  <div className="meta-blog-text">
-                    <p> August 21, 2023 </p>
-                  </div>
-                  <div className="em-blog-title">
-                    <h2>
-                      {" "}
-                      <Link legacyBehavior href="/blog-details">
-                        <a> How to Increase Business Products Sales </a>
-                      </Link>{" "}
-                    </h2>
-                  </div>
-                  <div className="em-blog-icon">
-                    <div className="em-blog-thumb">
-                      <img src="assets/images/resource/blog-icon.png" alt />
+                  <div className="em-blog-content">
+                    <div className="meta-blog-text">
+                      <p>{blog.title}</p>
                     </div>
-                    <div className="em-blog-icon-title">
-                      <h6> Julia Moris </h6>
+                    <div className="em-blog-title">
+                      <h2>
+                        <Link legacyBehavior href="/blog-details">
+                          <a>{blog.content}</a>
+                        </Link>
+                      </h2>
                     </div>
-                  </div>
-                  <div className="blog-button">
-                    <Link legacyBehavior href="/blog-details">
-                      <a>
-                        {" "}
-                        Learn More <i className="bi bi-plus" />{" "}
-                      </a>
-                    </Link>
+                    <div className="em-blog-icon">
+                      <div className="em-blog-thumb">
+                        <img
+                          src="assets/images/resource/blog-icon.png"
+                          alt="icon"
+                        />
+                      </div>
+                      <div className="em-blog-icon-title">
+                        <h6>Author: {blog.author}</h6>
+                      </div>
+                    </div>
+                    <div className={styles.blogButton}>
+                        <Link legacyBehavior href={`/blog-details/${blog._id}`}>
+                         <a>
+                          Learn More <i className="bi bi-plus" />
+                          </a>
+                        </Link>
+                          </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="col-lg-4 col-md-6 single_box_">
-              <div className="single-blog-box">
-                <div className="single-blog-thumb">
-                  <img src="assets/images/resource/blog3.png" alt />
-                  <div className="blog-top-button">
-                    <a href="#"> DESIGN </a>
-                  </div>
-                </div>
-                <div className="em-blog-content">
-                  <div className="meta-blog-text">
-                    <p> August 20, 2023 </p>
-                  </div>
-                  <div className="em-blog-title">
-                    <h2>
-                      {" "}
-                      <Link legacyBehavior href="/blog-details">
-                        <a> Top 10 Most Populars Google Chrome app</a>
-                      </Link>
-                    </h2>
-                  </div>
-                  <div className="em-blog-icon">
-                    <div className="em-blog-thumb">
-                      <img src="assets/images/resource/blog-icon.png" alt />
-                    </div>
-                    <div className="em-blog-icon-title">
-                      <h6> Amantha </h6>
-                    </div>
-                  </div>
-                  <div className="blog-button">
-                    <Link legacyBehavior href="/blog-details">
-                      <a>
-                        {" "}
-                        Learn More <i className="bi bi-plus" />{" "}
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6 single_box_">
-              <div className="single-blog-box">
-                <div className="single-blog-thumb">
-                  <img src="assets/images/resource/blog-sm-1.jpg" alt />
-                  <div className="blog-top-button">
-                    <a href="#"> GRAPHIC </a>
-                  </div>
-                </div>
-                <div className="em-blog-content">
-                  <div className="meta-blog-text">
-                    <p> August 25, 2023 </p>
-                  </div>
-                  <div className="em-blog-title">
-                    <h2>
-                      {" "}
-                      <Link legacyBehavior href="/blog-details">
-                        <a> Popular Consultants are big Meetup 2023 </a>
-                      </Link>{" "}
-                    </h2>
-                  </div>
-                  <div className="em-blog-icon">
-                    <div className="em-blog-thumb">
-                      <img src="assets/images/resource/blog-icon.png" alt />
-                    </div>
-                    <div className="em-blog-icon-title">
-                      <h6> Alex Collins </h6>
-                    </div>
-                  </div>
-                  <div className="blog-button">
-                    <Link legacyBehavior href="/blog-details">
-                      <a>
-                        {" "}
-                        Learn More <i className="bi bi-plus" />{" "}
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6 single_box_">
-              <div className="single-blog-box">
-                <div className="single-blog-thumb">
-                  <img src="assets/images/resource/blog-sm-2.jpg" alt />
-                  <div className="blog-top-button">
-                    <a href="#"> DEVELOPMENT </a>
-                  </div>
-                </div>
-                <div className="em-blog-content">
-                  <div className="meta-blog-text">
-                    <p> August 21, 2023 </p>
-                  </div>
-                  <div className="em-blog-title">
-                    <h2>
-                      {" "}
-                      <Link legacyBehavior href="/blog-details">
-                        <a> How to Increase Business Products Sales </a>
-                      </Link>{" "}
-                    </h2>
-                  </div>
-                  <div className="em-blog-icon">
-                    <div className="em-blog-thumb">
-                      <img src="assets/images/resource/blog-icon.png" alt />
-                    </div>
-                    <div className="em-blog-icon-title">
-                      <h6> Julia Moris </h6>
-                    </div>
-                  </div>
-                  <div className="blog-button">
-                    <Link legacyBehavior href="/blog-details">
-                      <a>
-                        {" "}
-                        Learn More <i className="bi bi-plus" />{" "}
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6 single_box_">
-              <div className="single-blog-box">
-                <div className="single-blog-thumb">
-                  <img src="assets/images/resource/blog-sm-1.jpg" alt />
-                  <div className="blog-top-button">
-                    <a href="#"> DESIGN </a>
-                  </div>
-                </div>
-                <div className="em-blog-content">
-                  <div className="meta-blog-text">
-                    <p> August 20, 2023 </p>
-                  </div>
-                  <div className="em-blog-title">
-                    <h2>
-                      {" "}
-                      <Link legacyBehavior href="/blog-details">
-                        <a> Top 10 Most Populars Google Chrome app</a>
-                      </Link>
-                    </h2>
-                  </div>
-                  <div className="em-blog-icon">
-                    <div className="em-blog-thumb">
-                      <img src="assets/images/resource/blog-icon.png" alt />
-                    </div>
-                    <div className="em-blog-icon-title">
-                      <h6> Amantha </h6>
-                    </div>
-                  </div>
-                  <div className="blog-button">
-                    <Link legacyBehavior href="/blog-details">
-                      <a>
-                        {" "}
-                        Learn More <i className="bi bi-plus" />{" "}
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
+          </div>
+          {/* Pagination */}
+          <div className="row">
             <div className="col-12">
               <div className="pagination justify-content-center mt-4">
                 <PagginationFuntion
@@ -282,8 +112,11 @@ const BlogGrid = () => {
             </div>
           </div>
         </div>
+
       </div>
     </Layout>
+  
   );
 };
+
 export default BlogGrid;

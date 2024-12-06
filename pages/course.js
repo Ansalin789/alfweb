@@ -17,7 +17,7 @@ const Course = () => {
   return (
     <Layout>
       <Breadcumb pageName={"Course"} />
-      <div className="blog-area style-two page">
+      {/* <div className="blog-area style-two page">
         <div className="container">
           <div className="row">
             <div className="col-lg-4 col-md-6 single_box_">
@@ -29,9 +29,7 @@ const Course = () => {
                   </div>
                 </div>
                 <div className="em-blog-content">
-                  {/* <div className="meta-blog-text">
-                    <p> August 25, 2023 </p>
-                  </div> */}
+            
                   <div className="em-blog-title">
                     <h2>
                       {" "}
@@ -40,14 +38,7 @@ const Course = () => {
                       </Link>{" "}
                     </h2>
                   </div>
-                  {/* <div className="em-blog-icon">
-                    <div className="em-blog-thumb">
-                      <img src="assets/images/resource/blog-icon.png" alt />
-                    </div>
-                    <div className="em-blog-icon-title">
-                      <h6> Alex Collins </h6>
-                    </div>
-                  </div> */}
+              
                   <div className="blog-button">
                     <Link legacyBehavior href="/tajweed">
                       <a>
@@ -68,9 +59,7 @@ const Course = () => {
                   </div>
                 </div>
                 <div className="em-blog-content">
-                  {/* <div className="meta-blog-text">
-                    <p> August 21, 2023 </p>
-                  </div> */}
+                
                   <div className="em-blog-title">
                     <h2>
                       {" "}
@@ -79,14 +68,7 @@ const Course = () => {
                       </Link>{" "}
                     </h2>
                   </div>
-                  {/* <div className="em-blog-icon">
-                    <div className="em-blog-thumb">
-                      <img src="assets/images/resource/blog-icon.png" alt />
-                    </div>
-                    <div className="em-blog-icon-title">
-                      <h6> Julia Moris </h6>
-                    </div>
-                  </div> */}
+                
                   <div className="blog-button">
                     <Link legacyBehavior href="/quran">
                       <a>
@@ -107,9 +89,7 @@ const Course = () => {
                   </div>
                 </div>
                 <div className="em-blog-content">
-                  {/* <div className="meta-blog-text">
-                    <p> August 20, 2023 </p>
-                  </div> */}
+                
                   <div className="em-blog-title">
                     <h2>
                       {" "}
@@ -118,14 +98,7 @@ const Course = () => {
                       </Link>
                     </h2>
                   </div>
-                  {/* <div className="em-blog-icon">
-                    <div className="em-blog-thumb">
-                      <img src="assets/images/resource/blog-icon.png" alt />
-                    </div>
-                    <div className="em-blog-icon-title">
-                      <h6> Amantha </h6>
-                    </div>
-                  </div> */}
+              
                   <div className="blog-button">
                     <Link legacyBehavior href="/arabic">
                       <a>
@@ -136,7 +109,7 @@ const Course = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* <div className="col-lg-4 col-md-6 single_box_">
               <div className="single-blog-box">
                 <div className="single-blog-thumb">
@@ -263,8 +236,8 @@ const Course = () => {
                 />
               </div>
             </div> */}
-          </div>
-        </div>
+          {/* </div>
+        </div> */}
 <HolidayCard />
           <div className="faq-area" data-aos="fade-up">
                 <div className="container">
@@ -279,7 +252,7 @@ const Course = () => {
                     </div>
                   </div>
                 </div>
-      </div>
+      {/* </div> */}
     </Layout>
   );
 };
