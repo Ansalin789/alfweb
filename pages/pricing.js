@@ -6,7 +6,7 @@ import styles from "./PricingTable.module.css"; // Adjust path if necessary
 const Pricing = () => {
   const pricingPlans = [
     {
-      tier: "Recommended",
+      tier: "ELITE",
       price: "$16 / Hour",
       teachers: [
         { name: "Proficient Arabic (Native) Teacher", status: "tick" },
@@ -36,7 +36,7 @@ const Pricing = () => {
       gradient: "linear-gradient(to bottom, #ff0000, #ff7e5f)" // ELITE Gradient
     },
     {
-      tier: "Preferred",
+      tier: "PREMIUM",
       price: "$11 / Hour",
       teachers: [
         { name: "Proficient Arabic (Native) Teacher", status: "tick" },
@@ -178,14 +178,14 @@ const Pricing = () => {
   }
 
               return (
-<div key={index} className="col-lg-3 col-md-6" style={{ marginBottom: "20px", position: "relative" }}>
+<div key={index} className="col-lg-3 col-md-6 mt-60" style={{ marginBottom: "20px", position: "relative" }}>
   {/* Conditional rendering for the small box above pricing card for ELITE and PREMIUM */}
   {["ELITE", "PREMIUM"].includes(plan.tier) && (
     <div
       className={`${styles.smallBox} ${plan.tier === "ELITE" ? styles.eliteBox : styles.premiumBox}`}
     >
       <p className={`${styles.small} ${plan.tier === "ELITE" ? styles.eliteText : styles.premiumText}`}>
-        {plan.tier === "ELITE" ? "Elite" : "Premium"}
+        {plan.tier === "ELITE" ? "Popular" : "Preferred"}
       </p>
     </div>
   )}
