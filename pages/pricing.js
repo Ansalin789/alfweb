@@ -154,22 +154,22 @@ const Pricing = () => {
   switch (plan.tier) {
     case "ELITE":
       gradient = "linear-gradient(to bottom, #e63946, #9b0d17)"; // Vibrant red to dark red
-      headerGradient = "linear-gradient(to right, #FF6347, #8B0000)"; // Vibrant coral to dark red
+      headerGradient = "linear-gradient(to right, #e63946,  rgb(116 10 18))"; // Vibrant coral to dark red
       textColor = "white"; // Gold text for ELITE
       break;
     case "PREMIUM":
       gradient = "linear-gradient(to bottom, #1a1aab, rgb(14 14 47))"; // Vibrant blue to navy blue
-      headerGradient = "linear-gradient(to right, #4682B4, #00008B)"; // Sky blue to navy
+      headerGradient = "linear-gradient(to right, #1a1aab, rgb(17 17 68))"; // Sky blue to navy
       textColor = "white"; // Light blue text for PREMIUM
       break;
     case "STANDARD":
       gradient = "linear-gradient(to bottom, white, #E0E0E0)"; // Muted silver
-      headerGradient = "linear-gradient(to right, #E0E0E0, #C0C0C0)"; // Light silver to muted silver
+      headerGradient = "linear-gradient(to right, white, rgb(199 193 193))"; // Light silver to muted silver
       textColor = "#000";
       break;
     case "BASIC":
       gradient = "linear-gradient(to bottom, white, #FFFACD)"; // Soft gold to pale yellow
-      headerGradient = "linear-gradient(to right, #FFFACD, #FFD700)"; // Pale yellow to soft gold
+      headerGradient = "linear-gradient(to right, white, rgb(231 223 147))"; // Pale yellow to soft gold
       textColor = "#000";
       break;
     default:
@@ -189,8 +189,6 @@ const Pricing = () => {
       </p>
     </div>
   )}
-
-
 
 
               {/* </div> */}
@@ -220,7 +218,7 @@ const Pricing = () => {
                   >
                     <div className={styles.header} style={{ background: headerGradient }}>
                       <div className={styles.tierShape}></div>
-                      {plan.tier !== "ELITE" &&  <h3 style={{ ...headerStyle, color: "white" }}>{plan.tier}</h3>}
+                      {/* {plan.tier !== "ELITE" &&  <h3 style={{ ...headerStyle, color: "white" }}>{plan.tier}</h3>} */}
                     </div>
                     <br />
                     <div className={styles.body} style={{ background: gradient }}>

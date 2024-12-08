@@ -52,7 +52,7 @@ const Pprocess = () => {
         </div>
       </div>
       <div className={styles.footer} data-aos="fade-up">
-        <button className={styles.ctaButton}>Begin Your Journey</button>
+        <button className={styles.ctaButton}> Begin Your Journey <i className="bi bi-plus" /></button>
       </div>
     </div>
   );

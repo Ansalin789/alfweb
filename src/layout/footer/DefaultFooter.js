@@ -75,13 +75,13 @@ const Footer = () => {
           <button className={styles.btn}>Submit</button>
           <h3 style={{marginTop:'60px',paddingLeft:'120px'}}>Download Our App</h3>
           <div className={styles.appLinks}>
-            <a href="#"><img src="/assets/icons/1111.png" alt=""  height={60}/></a>
-            <a href="#"><img src="/assets/icons/2222.png" alt="" height={60} /></a>
+            <a href="#"><img src="/assets/icons/fftt2.png" alt=""  height={50}/></a>
+            <a href="#"><img src="/assets/icons/fftt1.png" alt=""  height={50}/></a>
           </div>
           <br/>
           <br/>
           <div className={styles.app}>
-            <a href="#"><img src="/assets/icons/22222.png" alt="App Store" height={60}/></a>
+            <a href="#"><img src="/assets/icons/fftt3.png" alt="App Store" height={60}/></a>
             <a href="#"><img src="/assets/icons/11111.png" alt="Google Play" height={60} /></a>
           </div>
         </div>

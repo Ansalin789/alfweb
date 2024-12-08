@@ -78,7 +78,7 @@
   margin: 0;
 }
 
-.ctaButton {
+/* .ctaButton {
   background-color: #ff6347;
   color: #fff;
   border: none;
@@ -92,7 +92,7 @@
 
 .ctaButton:hover {
   background-color: #e5533c;
-}  
+}   */
 
 
 @media (max-width: 768px) {
@@ -111,5 +111,66 @@
   }
 } 
 
+/*about button*/
+
+.ctaButton {
+  padding: 9px 14px 14px 42px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: #fff;
+  background: #e63946;
+  display: inline-block;
+  border-radius: 30px;
+  border: 1px solid #e63946;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  margin-top: 38px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ctaButton:before {
+  position: absolute;
+  content: "";
+  z-index: -1;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 0;
+  background: #fff;
+  border-radius: 30px;
+  transition: 0.5s;
+}  
+
+.ctaButton i {
+  font-size: 20px;
+  width: 30px;
+  height: 30px;
+  line-height: 32px;
+  border-radius: 25px;
+  text-align: center;
+  background: #fff;
+  color: #e63946;
+  display: inline-block;
+  margin-left: 14px;
+  position: relative;
+  top: 3px;
+  transition: 0.5s;
+}
+
+.ctaButton:hover {
+  color: #e63946;
+}
+
+.ctaButton:hover i {
+  background: #e63946;
+  color: #fff;
+}
+
+.ctaButton:hover:before {
+  width: 100%;
+  left: 0;
+}
 
 
