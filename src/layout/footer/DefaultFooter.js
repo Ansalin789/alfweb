@@ -81,8 +81,8 @@ const Footer = () => {
           <br/>
           <br/>
           <div className={styles.app}>
-            <a href="#"><img src="/assets/icons/fftt3.png" alt="App Store" height={60}/></a>
-            <a href="#"><img src="/assets/icons/11111.png" alt="Google Play" height={60} /></a>
+            <a href="#"><img src="/assets/icons/fftt7.png" alt="App Store" height={70} width={190}/></a>
+            <a href="#"><img src="/assets/icons/fftt6.png" alt="Google Play" height={60} width={160}/></a>
           </div>
         </div>
       </div>

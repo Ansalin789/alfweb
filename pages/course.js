@@ -5,6 +5,7 @@ import { getPagination, pagination } from "@/src/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import HolidayCard from "./HolidayCard";
+import Holi from "./Holi";
 const Course = () => {
   let sort = 3;
   const [active, setActive] = useState(1);
@@ -239,6 +240,7 @@ const Course = () => {
           {/* </div>
         </div> */}
 <HolidayCard />
+<Holi />
           <div className="faq-area" data-aos="fade-up">
                 <div className="container">
                   <div className="col-lg-12 col-md-12 pl-0 max-w-full">
