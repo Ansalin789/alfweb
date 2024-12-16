@@ -153,28 +153,28 @@ const Pricing = () => {
 
   switch (plan.tier) {
     case "ELITE":
-      gradient = "linear-gradient(to bottom, #e63946, #9b0d17)"; // Vibrant red to dark red
-      headerGradient = "linear-gradient(to right, #e63946,  rgb(116 10 18))"; // Vibrant coral to dark red
-      textColor = "white"; // Gold text for ELITE
+      gradient = "linear-gradient(to bottom, white, #E0E0E0)"; // Vibrant red to dark red
+      headerGradient = "linear-gradient(to right, white, rgb(199 193 193))"; // Vibrant coral to dark red
+      textColor = "#000"; // Gold text for ELITE
       break;
     case "PREMIUM":
-      gradient = "linear-gradient(to bottom, #1a1aab, rgb(14 14 47))"; // Vibrant blue to navy blue
-      headerGradient = "linear-gradient(to right, #1a1aab, rgb(17 17 68))"; // Sky blue to navy
-      textColor = "white"; // Light blue text for PREMIUM
+      gradient = "linear-gradient(to bottom, white, #FFFACD)"; // Vibrant blue to navy blue
+      headerGradient = "linear-gradient(to right, white, rgb(231 223 147))"; // Sky blue to navy
+      textColor = "#000"; // Light blue text for PREMIUM
       break;
     case "STANDARD":
-      gradient = "linear-gradient(to bottom, white, #E0E0E0)"; // Muted silver
-      headerGradient = "linear-gradient(to right, white, rgb(199 193 193))"; // Light silver to muted silver
+      gradient = "linear-gradient(to bottom, white,white)"; // Muted silver
+      headerGradient = "linear-gradient(to right, white, white)"; // Light silver to muted silver
       textColor = "#000";
       break;
     case "BASIC":
-      gradient = "linear-gradient(to bottom, white, #FFFACD)"; // Soft gold to pale yellow
-      headerGradient = "linear-gradient(to right, white, rgb(231 223 147))"; // Pale yellow to soft gold
+      gradient = "linear-gradient(to bottom, white,white)"; // Soft gold to pale yellow
+      headerGradient = "linear-gradient(to right, white, white)"; // Pale yellow to soft gold
       textColor = "#000";
       break;
     default:
-      gradient = "linear-gradient(to bottom, black, #eee)"; // Fallback gradient
-      headerGradient = "linear-gradient(to right, #fff, #eee)"; // Fallback gradient
+      gradient = "linear-gradient(to bottom, white, white)"; // Fallback gradient
+      headerGradient = "linear-gradient(to right, white, white)"; // Fallback gradient
   }
 
               return (
@@ -236,7 +236,7 @@ const Pricing = () => {
                             {teacher.status === "wrong" && (
                               <span className={styles.cross}>&#10005;</span>
                             )} 
-                             <span style={{ color: (plan.tier === "ELITE" || plan.tier === "PREMIUM") ? "white" : "inherit" }}>
+                             <span style={{ color: (plan.tier === "ELITE" || plan.tier === "PREMIUM") ? "black" : "inherit" }}>
                             {teacher.name}</span>
                           </li>
                         ))}
@@ -253,7 +253,7 @@ const Pricing = () => {
                             {academic.status === "wrong" && (
                               <span className={styles.cross}>&#10005;</span>
                             )}
-                             <span style={{ color: (plan.tier === "ELITE" || plan.tier === "PREMIUM") ? "white" : "inherit" }}>
+                             <span style={{ color: (plan.tier === "ELITE" || plan.tier === "PREMIUM") ? "black" : "inherit" }}>
                              {academic.name}</span>
                           </li>
                         ))}
@@ -270,7 +270,7 @@ const Pricing = () => {
                             {portalAccess.status === "wrong" && (
                               <span className={styles.cross}>&#10005;</span>
                             )}
-                             <span style={{ color: (plan.tier === "ELITE" || plan.tier === "PREMIUM") ? "white" : "inherit" }}>
+                             <span style={{ color: (plan.tier === "ELITE" || plan.tier === "PREMIUM") ? "black" : "inherit" }}>
 
                              {portalAccess.name}</span>
                           </li>
@@ -297,7 +297,7 @@ const Pricing = () => {
       {scheduling.status === "wrong" && (
         <span className={styles.cross}>&#10005;</span>
       )}
-                             <span style={{ color: (plan.tier === "ELITE" || plan.tier === "PREMIUM") ? "white" : "inherit" }}>
+                             <span style={{ color: (plan.tier === "ELITE" || plan.tier === "PREMIUM") ? "black" : "inherit" }}>
                {scheduling.name}</span>
     </li>
   ))}

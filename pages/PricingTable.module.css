@@ -141,27 +141,27 @@
 
 /* ELITE style */
 .eliteBox {
-  border-color: #ff5733; /* Warm orange border */
+  border-color: #9d9292; /* Warm orange border */
   /* background-color: #f44336; */
 }
 
 .eliteText {
   font-size: 16px;
   font-weight: bold;
-  color: #ff5733; /* Matching text color */
+  color: #9d9292; /* Matching text color */
   letter-spacing: 1px;
   font-family: 'Helvetica Neue', sans-serif;
 }
 
 /* PREMIUM style */
 .premiumBox {
-  border-color: #2980b9; /* Cool blue border */
+  border-color: #f3e24d; /* Cool blue border */
 }
 
 .premiumText {
   font-size: 16px;
   font-weight: bold;
-  color: #2980b9; /* Matching text color */
+  color: #f3e24d; /* Matching text color */
   letter-spacing: 1px;
   font-family: 'Helvetica Neue', sans-serif;
 }
