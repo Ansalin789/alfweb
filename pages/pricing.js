@@ -328,7 +328,7 @@ const Pricing = () => {
                             {discount.status === "wrong" && (
                               <span className={styles.cross}>&#10005;</span>
                             )}
-                             <span style={{ color: (plan.tier === "ELITE" || plan.tier === "PREMIUM") ? "white" : "inherit" }}>
+                             <span style={{ color: (plan.tier === "ELITE" || plan.tier === "PREMIUM") ? "black" : "inherit" }}>
 
                              {discount.name}</span>
                           </li>
