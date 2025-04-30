@@ -123,7 +123,7 @@ const Header2 = () => {
               <nav className="consen_menu">
                 <DaskTopMenusMenus />
                 <div className="header-button">
-                  <Link legacyBehavior href="localhost:3000/form">
+                  <Link legacyBehavior href="/StudentForm">
                      Book Free Sessions
                   </Link>
                 </div>
