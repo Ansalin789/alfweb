@@ -47,7 +47,7 @@ const MultiStepForm = () => {
   // Learning Interest States
   const [learningInterest, setLearningInterest] = useState([]);
   const [iqraUsageOther, setIqraUsageOther] = useState("");
-  const [numberOfStudents, setNumberOfStudents] = useState("");
+  // const [numberOfStudents, setNumberOfStudents] = useState("");
   const [preferredTeacher, setPreferredTeacher] = useState("");
   const [referralSource, setReferralSource] = useState("");
   const [referralSourceOther, setReferralSourceOther] = useState("");
@@ -159,7 +159,7 @@ const MultiStepForm = () => {
     // Check if at least one learning interest is selected
     return (
       learningInterest.length > 0 && // At least one interest must be selected
-      numberOfStudents &&
+      // numberOfStudents &&
       preferredTeacher &&
       referralSource
     );
@@ -219,7 +219,7 @@ const MultiStepForm = () => {
         countryCode: countryCode.toLowerCase(),
         city: city,
         learningInterest: learningInterest[0],
-        numberOfStudents: Number(numberOfStudents),
+        // numberOfStudents: Number(numberOfStudents),
         preferredTeacher: preferredTeacher,
         preferredFromTime: preferredFromTime,
         preferredToTime: preferredToTime,
@@ -329,16 +329,16 @@ const MultiStepForm = () => {
   }, [country]);
 
   return (
-    <div className="align-middle p-2 sm:p-6 min-h-screen bg-gradient-to-r from-[#dad9d9] to-[#dad9d9]">
-      <div className="w-full max-w-[95%] sm:max-w-[40%] mx-auto justify-center p-4 sm:p-6 align-middle rounded-br-[10px] rounded-tl-[10px] rounded-bl-[10px] rounded-tr-[10px] shadow-md bg-gradient-to-r from-[#fff] via-[#f8f8f8] to-[#fff]">
+    <div className="flex items-center p-2 sm:p-6 min-h-screen bg-gradient-to-r from-[#d9d9da] to-[#d9d9da]">
+      <div className="w-full max-w-[100%] sm:max-w-[40%] mx-auto justify-center p-4 sm:p-6 align-middle rounded-br-[20px] rounded-tl-[20px] rounded-bl-[20px] rounded-tr-[20px] shadow-md bg-gradient-to-r from-[#fff] via-[#f8f8f8] to-[#fff]">
         <div className="flex justify-between items-center mb-2">
           <div className="text-xs sm:text-sm font-medium">Complete 3 Steps</div>
-          <div className="text-xs sm:text-sm font-medium">{step * 33}%</div>
+          <div className="text-xs sm:text-sm font-medium">{step * 33.4.toFixed(0)}%</div>
         </div>
         <div className="w-full bg-[#dfdfdf] rounded-full h-2.5 mb-0">
           <div
             className="bg-[#293552] h-2.5 rounded-full"
-            style={{ width: `${step * 33}%` }}
+            style={{ width: `${step * 33.4}%` }}
           ></div>
         </div>
 
@@ -506,11 +506,11 @@ const MultiStepForm = () => {
                   />
                 </div>
               </div>
-              <div className="text-right">
+              <div className="flex justify-center mt-4">
                 <button
                   type="button"
                   onClick={nextStep}
-                  className="sm:w-auto sm:justify-end sm:ml-[240px] text-[14px] sm:text-[16px] p-2 py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-br-[8px] rounded-tl-[8px] rounded-bl-[8px] rounded-tr-[8px] shadow-lg"
+                  className=" text-[14px] sm:text-[16px] p-2 py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-br-[8px] rounded-tl-[8px] rounded-bl-[8px] rounded-tr-[8px] shadow-lg"
                 >
                   Next
                 </button>
@@ -525,14 +525,14 @@ const MultiStepForm = () => {
                 type="button"
                 onClick={prevStep}
                 aria-label="Go back to previous step"
-                className="text-gray-500 p-2 text-[12px]"
+                className="text-gray-500 p-2 py-4 text-[12px]"
               >
                 ← back
               </button>
-              <h2 className="text-[12px] sm:text-[14px] text-center font-bold mb-3 text-[#293552]">
+              <h2 className="text-[12px] sm:text-[14px] text-center font-bold mb-4 text-[#293552]">
                 What will you use AL Furqan for?
               </h2>
-              <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-4 mb-4 text-[11px] sm:text-[11px]">
+              <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-4 mb-10 text-[11px] sm:text-[11px]">
                 {["Quran", "Islamic Studies", "Arabic"].map((option) => (
                   <button
                     key={option}
@@ -551,7 +551,7 @@ const MultiStepForm = () => {
                 ))}
               </div>
 
-              <h2 className="text-center font-bold mb-3 text-[#293552] text-[14px]">
+              {/* <h2 className="text-center font-bold mb-3 text-[#293552] text-[14px]">
                 How many students will join?
               </h2>
               <div className="grid grid-cols-5 gap-4 mb-6 rounded-xl text-[12px]">
@@ -568,12 +568,12 @@ const MultiStepForm = () => {
                     {count}
                   </button>
                 ))}
-              </div>
+              </div> */}
 
-              <h2 className="text-[14px] text-center font-bold mb-3 text-[#293552]">
+              <h2 className="text-[14px] text-center font-bold mb-4 text-[#293552]">
                 Which teacher would you like?
               </h2>
-              <div className="grid grid-cols-3 gap-4 mb-6 text-[11px]">
+              <div className="grid grid-cols-3 gap-4 mb-10 text-[11px]">
                 {["Male", "Female", "Either"].map((preference) => (
                   <button
                     key={preference}
@@ -590,10 +590,10 @@ const MultiStepForm = () => {
               </div>
 
               <div className="mt-4">
-                <h2 className="text-[14px] text-center font-bold mb-3 text-[#293552]">
+                <h2 className="text-[14px] text-center font-bold mb-4 text-[#293552]">
                   Where did you hear about AL Furqan?
                 </h2>
-                <div className="grid grid-cols-3 sm:grid sm:grid-cols-5 gap-4 mb-6 text-[10px]">
+                <div className="grid grid-cols-3 sm:grid sm:grid-cols-5 gap-4 mb-10 text-[10px]">
                   {["Friend", "Social Media", "E-Mail", "Google", "Other"].map(
                     (source) => (
                       <button
@@ -623,7 +623,7 @@ const MultiStepForm = () => {
                   </div>
                 )}
               </div>
-              <div className="text-right">
+              <div className="flex justify-center mt-4">
                 <button
                   type="button"
                   onClick={nextStep}
@@ -636,11 +636,11 @@ const MultiStepForm = () => {
           )}
 
           {step === 3 && (
-            <div className="p-2 sm:p-4 rounded-3xl">
+            <div className="p-2 sm:p-4 rounded-3xl justify-center align-middle">
               <button
                 type="button"
                 onClick={prevStep}
-                className="text-gray-500 mb-4 text-[12px] hover:text-gray-700 transition-colors"
+                className="text-gray-500 p-2 py-2 mb-4 text-[12px] hover:text-gray-700 transition-colors"
               >
                 ← back
               </button>
@@ -713,7 +713,7 @@ const MultiStepForm = () => {
                     }
                   />
                 </div>
-                <div className="w-full h-[300px] sm:w-60 p-2 rounded-[15px] shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)]">
+                <div className="w-full h-[325px] sm:w-60 p-2 rounded-[15px] shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)]">
                   <h3 className="text-[11px] text-center align-middle font-semibold mb-2 text-[#293552] p-2">
                     Available Time Slots
                   </h3>
@@ -761,10 +761,11 @@ const MultiStepForm = () => {
                 </div>
               </div>
 
+              <div className="flex justify-center">
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full sm:w-auto justify-center sm:ml-48 mt-6 sm:mt-8 text-[12px] sm:text-[14px] p-2 align-middle py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-[10px] shadow-lg flex ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                className={`justify-center mt-6 sm:mt-8 text-[12px] sm:text-[14px] p-2 align-middle py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-[10px] shadow-lg flex ${isLoading ? "opacity-50 cursor-not-allowed" : ""
                   }`}
               >
                 {isLoading ? (
@@ -795,8 +796,13 @@ const MultiStepForm = () => {
                   "Submit"
                 )}
               </button>
+              </div>
+           
+              
             </div>
           )}
+
+
         </form>
       </div>
     </div>
