@@ -207,6 +207,14 @@ const MultiStepForm = () => {
       }
       // Clean and format the phone number - remove any non-numeric characters
       // const cleanPhoneNumber = phoneNumber.toString().replace(/\D/g, '');
+      function formatDateLocal(date) {
+        // Returns yyyy-mm-dd in local time
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+      
 
       const formattedData = {
         id: uuidv4(),
@@ -225,8 +233,8 @@ const MultiStepForm = () => {
         preferredToTime: preferredToTime,
         referralSource: referralSource,
         referralDetails: referralSourceOther || referral || "",
-        startDate: startDate.toISOString(),
-        endDate: toDate.toISOString(),
+        startDate: formatDateLocal(startDate),
+        endDate: formatDateLocal(toDate),
         evaluationStatus: "PENDING",
         refernceId: referral,
         status: "Active",
@@ -237,7 +245,7 @@ const MultiStepForm = () => {
 
       // Debug log to check the data being sent
       console.log("Sending data:", formattedData);
-      const response = await fetch(`http://localhost:5001/student`, {
+      const response = await fetch(`https://api.blackstoneinfomaticstech.com/student`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
