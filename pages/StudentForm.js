@@ -89,38 +89,55 @@ const MultiStepForm = () => {
    * @param {Value} value - The selected date value
    */
   const handleDateChange = (value) => {
-    if (value instanceof Date) {
-      setStartDate(value);
-      setToDate(value); // Set toDate to the same as startDate
-      loadAvailableTimes();
-    }
-  };
+  if (value instanceof Date) {
+    setStartDate(value);
+    setToDate(value);
 
-  const loadAvailableTimes = () => {
-    const defaultTimes = [
-      "09:00 AM",
-      "09:30 AM",
-      "10:00 AM",
-      "10:30 AM",
-      "11:00 AM",
-      "11:30 AM",
-      "12:00 PM",
-      "12:30 PM",
-      "01:00 PM",
-      "01:30 PM",
-      "02:00 PM",
-    ];
-    setAvailableTimes(defaultTimes);
+    // Format date as YYYY-MM-DD
+    const formattedDate = value.toISOString().split("T")[0];
+
+    loadAvailableTimes(formattedDate); // pass the date to loadAvailableTimes
+  }
+};
+
+const loadAvailableTimes = async (scheduleDate) => {
+  if (!scheduleDate) {
+    console.warn("No scheduleDate provided to loadAvailableTimes");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.blackstoneinfomaticstech.com/ac/availabletime?scheduleDate=${scheduleDate}`
+    );
+    const data = await response.json();
+
+    // Flatten all available slots from all coaches
+    const allSlots = data.flatMap(coach => coach.availableSlots);
+
+    // Extract unique start times
+    const uniqueStartTimes = Array.from(new Set(allSlots.map(slot => slot.start)));
+
+    // Format start times to "hh:mm AM/PM"
+    const formattedTimes = uniqueStartTimes.map(time => {
+      const [hour, minute] = time.split(":");
+      const date = new Date();
+      date.setHours(+hour);
+      date.setMinutes(+minute);
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    });
+
+    setAvailableTimes(formattedTimes);
     setPreferredFromTime("");
+  } catch (error) {
+    console.error("Failed to fetch available times:", error);
+    setAvailableTimes([]);
+  }
+};
 
-    // Automatically set preferredToTime when a from time is selected
-    // const handleFromTimeSelection = (fromTime: string) => {
-    //     const fromTimeIndex = defaultTimes.indexOf(fromTime);
-    //     if (fromTimeIndex !== -1 && fromTimeIndex + 1 < defaultTimes.length) {
-    //         setPreferredToTime(defaultTimes[fromTimeIndex + 1]);
-    //     }
-    // };
-  };
 
   const validateStep1 = () => {
     if (!firstName.trim() || firstName.length < 3) {
@@ -729,39 +746,33 @@ const MultiStepForm = () => {
                     <div>
                       <div className="max-h-[240px] overflow-y-auto scrollbar-hidden">
                         <div className="grid grid-cols-1 gap-3 text-[10px]">
-                          {availableTimes.map((time) => (
-                            <button
-                              key={time}
-                              type="button"
-                              value={preferredFromTime}
-                              onClick={() => {
-                                const fromTime = time;
+                        {availableTimes.map((time, index) => (
+  <button
+    key={time}
+    type="button"
+    onClick={() => {
+      if (typeof time === "string" && time.includes(":")) {
+        setPreferredFromTime(time);
 
-                                // Check if fromTime is a valid string
-                                if (
-                                  typeof fromTime === "string" &&
-                                  fromTime.includes(":")
-                                ) {
-                                  setPreferredFromTime(fromTime);
-                                  const toTime =
-                                    calculatePreferredToTime(fromTime);
-                                  setPreferredToTime(toTime);
-                                } else {
-                                  console.error(
-                                    "Invalid fromTime format:",
-                                    fromTime
-                                  );
-                                  // Optionally, handle the error (e.g., show a message to the user)
-                                }
-                              }}
-                              className={`p-2 rounded-lg transition-all duration-200 ${preferredFromTime === time
-                                ? "bg-[#293552] text-white shadow-lg transform scale-100 p-2 text-[8px]"
-                                : "bg-gray-200 hover:bg-gray-500 hover:text-white p-2 text-[#293552] text-[8px]"
-                                }`}
-                            >
-                              {time}
-                            </button>
-                          ))}
+        // Find next time slot for end time
+        const nextTime = availableTimes[index + 1] || time; // fallback to same time if no next slot
+
+         setPreferredToTime(nextTime);
+      } else {
+        console.error("Invalid fromTime format:", time);
+      }
+    }}
+    className={`p-2 rounded-lg transition-all duration-200 ${
+      preferredFromTime === time
+        ? "bg-[#293552] text-white shadow-lg scale-100 text-[8px]"
+        : "bg-gray-200 hover:bg-gray-500 hover:text-white text-[#293552] text-[8px]"
+    }`}
+  >
+    {time}
+  </button>
+))}
+
+
                         </div>
                       </div>
                     </div>
