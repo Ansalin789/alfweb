@@ -126,14 +126,6 @@ const HiringForm = ({ onClose }) => {
     }
 
     try {
-      const token = localStorage.getItem("SupervisorAuthToken");
-
-      if (!token) {
-        console.error("❌ SupervisorAuthToken not found");
-        setFailedMessage("Authentication token not found. Please login again.");
-        setFailed(true);
-        return;
-      }
 
       const response = await axios.post(
         "https://api.blackstoneinfomaticstech.com/recruit",
@@ -141,7 +133,6 @@ const HiringForm = ({ onClose }) => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -358,9 +349,9 @@ const HiringForm = ({ onClose }) => {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
               >
                 <option value="">Select Position</option>
-                <option value="Quran">Quran Teacher</option>
-                <option value="Arabic">Arabic Teacher</option>
-                <option value="Islamic">Islamic Teacher</option>
+                <option value="Quran Teacher">Quran Teacher</option>
+                <option value="Arabic Teacher">Arabic Teacher</option>
+                <option value="Islamic Teacher">Islamic Teacher</option>
               </select>
             </div>
           </div>
