@@ -118,16 +118,10 @@ const loadAvailableTimes = async (scheduleDate) => {
     // Extract unique start times
     const uniqueStartTimes = Array.from(new Set(allSlots.map(slot => slot.start)));
 
-    // Format start times to "hh:mm AM/PM"
+    // Format start times to "HH:mm" (24-hour format)
     const formattedTimes = uniqueStartTimes.map(time => {
       const [hour, minute] = time.split(":");
-      const date = new Date();
-      date.setHours(+hour);
-      date.setMinutes(+minute);
-      return date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      return `${hour.padStart(2, '0')}:${minute}`;
     });
 
     setAvailableTimes(formattedTimes);
@@ -320,31 +314,20 @@ const loadAvailableTimes = async (scheduleDate) => {
    * @param {React.ChangeEvent<HTMLSelectElement>} e - The change event
    */
 
-  const formatTime = (hours, minutes) => {
-    const period = hours >= 12 ? "PM" : "AM";
-    const formattedHours = (hours % 12 || 12).toString().padStart(2, "0"); // Ensure two-digit format
-    const formattedMinutes = minutes.toString().padStart(2, "0");
-    return `${formattedHours}:${formattedMinutes} ${period}`;
-  };
-
   const calculatePreferredToTime = (fromTime) => {
-    const match = fromTime.match(/^(\d{1,2}):(\d{2}) (AM|PM)$/);
-    if (!match) return "12:00 AM"; // Default if input is incorrect
+    const match = fromTime.match(/^(\d{2}):(\d{2})$/);
+    if (!match) return "00:00"; // Default if input is incorrect
 
-    let [hours, minutes, period] = match;
+    let [_, hours, minutes] = match;
     hours = parseInt(hours, 10);
     minutes = parseInt(minutes, 10);
-
-    // Convert to 24-hour format
-    if (period === "PM" && hours !== 12) hours += 12;
-    if (period === "AM" && hours === 12) hours = 0;
 
     // Add 30 minutes
     const totalMinutes = hours * 60 + minutes + 30;
     const newHours = Math.floor(totalMinutes / 60) % 24;
     const newMinutes = totalMinutes % 60;
 
-    return formatTime(newHours, newMinutes);
+    return `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}`;
   };
 
   useEffect(() => {
