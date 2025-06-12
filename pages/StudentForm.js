@@ -51,13 +51,46 @@ const MultiStepForm = () => {
   const [preferredTeacher, setPreferredTeacher] = useState("");
   const [referralSource, setReferralSource] = useState("");
   const [referralSourceOther, setReferralSourceOther] = useState("");
-
+  const [availableCoaches, setAvailableCoaches] = useState([]);
+  const [selectedCoachId, setSelectedCoachId] = useState(null);
+  const [allSlots, setAllSlots] = useState([]);
+  const [selectedCoachIndex, setSelectedCoachIndex] = useState(null);
   // Schedule States
   const [startDate, setStartDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
-  const [preferredFromTime, setPreferredFromTime] = useState("");
-  const [preferredToTime, setPreferredToTime] = useState("");
+  const [openSlotIndex, setOpenSlotIndex] = useState(null);
+  // Track selected time slot
+  const [preferredFromTime, setPreferredFromTime] = useState(null);
+  const [preferredToTime, setPreferredToTime] = useState(null);
+
+  // Toggle dropdown open/close
+  const [selectedSlotTimes, setSelectedSlotTimes] = useState(null);
+
+  const [selectedACId, setSelectedACId] = useState(null);
+
+  const toggleSlot = (index) => {
+    if (openSlotIndex === index) {
+      setOpenSlotIndex(null);
+      setPreferredFromTime(null);
+      setPreferredToTime(null);
+      setSelectedCoachIndex(null);
+      setSelectedSlotTimes(null);
+      setSelectedACId(null);
+      console.log("AC ID cleared");
+    } else {
+      setOpenSlotIndex(index);
+      setPreferredFromTime(null);
+      setPreferredToTime(null);
+      setSelectedCoachIndex(index);
+      setSelectedSlotTimes(availableTimes[index]?.availableSlots || []);
+      setSelectedACId(availableTimes[index]?.academicCoachId || null);
+      console.log("Selected AC ID:", availableTimes[index]?.academicCoachId);
+    }
+  };
+
   const [availableTimes, setAvailableTimes] = useState([]);
+
+
   const generateReferralId = () => {
     const specialChars = "ALF-REFID-";
     const randomNum = Math.floor(10000 + Math.random() * 90000); // Ensures a 5-digit number
@@ -89,48 +122,49 @@ const MultiStepForm = () => {
    * @param {Value} value - The selected date value
    */
   const handleDateChange = (value) => {
-  if (value instanceof Date) {
-    setStartDate(value);
-    setToDate(value);
+    if (value instanceof Date) {
+      setStartDate(value);
+      setToDate(value);
 
-    // Format date as YYYY-MM-DD
-    const formattedDate = value.toISOString().split("T")[0];
+      // Format date as YYYY-MM-DD
+      const formattedDate = value.toISOString().split("T")[0];
 
-    loadAvailableTimes(formattedDate); // pass the date to loadAvailableTimes
-  }
-};
+      loadAvailableTimes(formattedDate); // pass the date to loadAvailableTimes
+    }
+  };
+  const selectedCoach = selectedCoachIndex !== null ? availableTimes[selectedCoachIndex] : null;
 
-const loadAvailableTimes = async (scheduleDate) => {
-  if (!scheduleDate) {
-    console.warn("No scheduleDate provided to loadAvailableTimes");
-    return;
-  }
+  const loadAvailableTimes = async (scheduleDate) => {
+    if (!scheduleDate) {
+      console.warn("No scheduleDate provided to loadAvailableTimes");
+      return;
+    }
 
-  try {
-    const response = await fetch(
-      `https://api.blackstoneinfomaticstech.com/ac/availabletime?scheduleDate=${scheduleDate}`
-    );
-    const data = await response.json();
+    try {
+      const response = await fetch(
+        `http://localhost:5001/ac/availabletime?scheduleDate=${scheduleDate}`
+      );
+      const data = await response.json();
 
-    // Flatten all available slots from all coaches
-    const allSlots = data.flatMap(coach => coach.availableSlots);
+      console.log("Raw API response:", data);
+      
+      // Map over the array of coaches and only keep start times
+      const uniqueCoaches = data.map(coach => ({
+        academicCoachId: coach.academicCoachId,
+        availableSlots: coach.availableSlots.map(slot => ({
+          start: slot.start,
+          end: slot.end
+        }))
+      }));
 
-    // Extract unique start times
-    const uniqueStartTimes = Array.from(new Set(allSlots.map(slot => slot.start)));
+      setAvailableTimes(uniqueCoaches);
+    } catch (err) {
+      console.error("Error fetching available times:", err);
+      setAvailableTimes([]);
+    }
+  };
 
-    // Format start times to "HH:mm" (24-hour format)
-    const formattedTimes = uniqueStartTimes.map(time => {
-      const [hour, minute] = time.split(":");
-      return `${hour.padStart(2, '0')}:${minute}`;
-    });
 
-    setAvailableTimes(formattedTimes);
-    setPreferredFromTime("");
-  } catch (error) {
-    console.error("Failed to fetch available times:", error);
-    setAvailableTimes([]);
-  }
-};
 
 
   const validateStep1 = () => {
@@ -212,7 +246,7 @@ const loadAvailableTimes = async (scheduleDate) => {
     try {
       // Validate required fields before submission
       if (!validateStep1().isValid || !validateStep2() || !validateStep3()) {
-        alert("Please fill in all required fields");
+        // alert("Please fill in all required fields");
         setIsLoading(false);
         return;
       }
@@ -225,7 +259,7 @@ const loadAvailableTimes = async (scheduleDate) => {
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
       }
-      
+
 
       const formattedData = {
         id: uuidv4(),
@@ -252,7 +286,11 @@ const loadAvailableTimes = async (scheduleDate) => {
         createdBy: "SYSTEM",
         lastUpdatedBy: "SYSTEM",
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        academicCoachId: availableTimes[selectedCoachIndex].academicCoachId,
       };
+
+      console.log("Form data with AC ID:", formattedData);
+      console.log("Selected AC ID at submission:", selectedACId);
 
       // Debug log to check the data being sent
       console.log("Sending data:", formattedData);
@@ -314,21 +352,21 @@ const loadAvailableTimes = async (scheduleDate) => {
    * @param {React.ChangeEvent<HTMLSelectElement>} e - The change event
    */
 
+  // const formatTime = (hours, minutes) => {
+  //   const period = hours >= 12 ? "PM" : "AM";
+  //   const formattedHours = (hours % 12 || 12).toString().padStart(2, "0"); // Ensure two-digit format
+  //   const formattedMinutes = minutes.toString().padStart(2, "0");
+  //   return `${formattedHours}:${formattedMinutes} ${period}`;
+  // };
+
   const calculatePreferredToTime = (fromTime) => {
-    const match = fromTime.match(/^(\d{2}):(\d{2})$/);
-    if (!match) return "00:00"; // Default if input is incorrect
-
-    let [_, hours, minutes] = match;
-    hours = parseInt(hours, 10);
-    minutes = parseInt(minutes, 10);
-
-    // Add 30 minutes
-    const totalMinutes = hours * 60 + minutes + 30;
-    const newHours = Math.floor(totalMinutes / 60) % 24;
-    const newMinutes = totalMinutes % 60;
-
-    return `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}`;
+    for (const coach of allSlots) {
+      const match = coach.availableSlots.find(slot => slot.start === fromTime);
+      if (match) return match.end;
+    }
+    return ""; // fallback
   };
+
 
   useEffect(() => {
     const fetchedCities = countriesCities.getCities(country);
@@ -606,7 +644,7 @@ const loadAvailableTimes = async (scheduleDate) => {
                     (source) => (
                       <button
                         key={source}
-                        type="button" 
+                        type="button"
                         onClick={() => setReferralSource(source)}
                         className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${referralSource === source
                           ? "bg-[#0c13752e] font-semibold"
@@ -721,86 +759,104 @@ const loadAvailableTimes = async (scheduleDate) => {
                     }
                   />
                 </div>
-                <div className="w-full h-[325px] sm:w-60 p-2 rounded-[15px] shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)]">
-                  <h3 className="text-[11px] text-center align-middle font-semibold mb-2 text-[#293552] p-2">
-                    Available Time Slots
+                <div className="w-full sm:w-60 p-3 rounded-[15px] shadow-lg">
+                  <h3 className="text-sm text-center font-semibold mb-2 text-[#293552]">
+                    Available Slots
                   </h3>
-                  <div className="grid grid-cols-1 text-center gap-4 mb-4">
-                    <div>
-                      <div className="max-h-[240px] overflow-y-auto scrollbar-hidden">
-                        <div className="grid grid-cols-1 gap-3 text-[10px]">
-                        {availableTimes.map((time, index) => (
-  <button
-    key={time}
-    type="button"
-    onClick={() => {
-      if (typeof time === "string" && time.includes(":")) {
-        setPreferredFromTime(time);
 
-        // Find next time slot for end time
-        const nextTime = availableTimes[index + 1] || time; // fallback to same time if no next slot
+                  <div className="flex flex-col gap-2 h-[330px] overflow-scroll scrollbar-hide">
+                    <style jsx>{`
+                      .scrollbar-hide::-webkit-scrollbar {
+                        display: none;
+                      }
+                      .scrollbar-hide {
+                        -ms-overflow-style: none;
+                        scrollbar-width: none;
+                      }
+                    `}</style>
+                    {availableTimes.map((coach, index) => (
+                      <div key={coach.academicCoachId || index}>
+                        <button
+                          onClick={() => toggleSlot(index)}
+                          className={`w-full text-center px-2 py-2 rounded-full font-semibold ${
+                            openSlotIndex === index
+                              ? "bg-[#293552] text-white"
+                              : "bg-gray-200 hover:bg-gray-400"
+                          }`}
+                        >
+                          Slot {index + 1}
+                        </button>
 
-         setPreferredToTime(nextTime);
-      } else {
-        console.error("Invalid fromTime format:", time);
-      }
-    }}
-    className={`p-2 rounded-lg transition-all duration-200 ${
-      preferredFromTime === time
-        ? "bg-[#293552] text-white shadow-lg scale-100 text-[8px]"
-        : "bg-gray-200 hover:bg-gray-500 hover:text-white text-[#293552] text-[8px]"
-    }`}
-  >
-    {time}
-  </button>
-))}
-
-
-                        </div>
+                        {openSlotIndex === index && selectedSlotTimes && (
+                          <div className="mt-2 grid grid-cols-1 gap-3 text-xs">
+                            {selectedSlotTimes.length > 0 ? (
+                              selectedSlotTimes.map((slot, i) => (
+                                <button
+                                  type="button"
+                                  key={i}
+                                  onClick={() => {
+                                    setPreferredFromTime(slot.start);
+                                    setPreferredToTime(slot.end);
+                                    setSelectedCoachIndex(index);
+                                  }}
+                                  className={`p-2 rounded-lg text-center ${
+                                    preferredFromTime === slot.start && selectedCoachIndex === index
+                                      ? "bg-gray-600 text-white"
+                                      : "bg-gray-200 hover:bg-gray-400"
+                                  }`}
+                                >
+                                  {slot.start}
+                                </button>
+                              ))
+                            ) : (
+                              <div className="col-span-2 text-center text-gray-500">No available slots</div>
+                            )}
+                          </div>
+                        )}
                       </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
 
               <div className="flex justify-center">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className={`justify-center mt-6 sm:mt-8 text-[12px] sm:text-[14px] p-2 align-middle py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-[10px] shadow-lg flex ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-              >
-                {isLoading ? (
-                  <div className="flex items-center justify-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Submitting...
-                  </div>
-                ) : (
-                  "Submit"
-                )}
-              </button>
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className={`justify-center mt-6 sm:mt-8 text-[12px] sm:text-[14px] p-2 align-middle py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-[10px] shadow-lg flex ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center">
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Submitting...
+                    </div>
+                  ) : (
+                    "Submit"
+                  )}
+                </button>
               </div>
-           
-              
+
+
             </div>
           )}
 
