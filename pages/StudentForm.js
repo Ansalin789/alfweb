@@ -34,6 +34,7 @@ const MultiStepForm = () => {
   const [country, setCountry] = useState("USA");
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState("");
+  const [timeZone, setTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
   const countriesCities = require("countries-cities");
 
   // Basic Information States
@@ -196,6 +197,9 @@ const MultiStepForm = () => {
     if (!country) {
       return { isValid: false, field: "Country" };
     }
+    if (!timeZone) {
+      return { isValid: false, field: "Time Zone" };
+    }
 
     return { isValid: true, field: null };
   };
@@ -285,7 +289,7 @@ const MultiStepForm = () => {
         status: "Active",
         createdBy: "SYSTEM",
         lastUpdatedBy: "SYSTEM",
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        timeZone: timeZone,
         academicCoachId: availableTimes[selectedCoachIndex].academicCoachId,
       };
 
@@ -373,6 +377,14 @@ const MultiStepForm = () => {
     setCities(fetchedCities);
     setCity("");
   }, [country]);
+
+  useEffect(() => {
+    // Get all available time zones
+    const timeZones = Intl.supportedValuesOf('timeZone');
+    setTimeZones(timeZones);
+  }, []);
+
+  const [timeZones, setTimeZones] = useState([]);
 
   return (
     <div className="flex items-center p-2 sm:p-6 min-h-screen bg-gradient-to-r from-[#d9d9da] to-[#d9d9da]">
@@ -552,6 +564,23 @@ const MultiStepForm = () => {
                   />
                 </div>
               </div>
+
+              <div className="mb-[12px]">
+                <label htmlFor="Time Zone" className="text-[14px] text-[#293453]">Time Zone</label>
+                <select
+                  id="timeZone"
+                  value={timeZone}
+                  onChange={(e) => setTimeZone(e.target.value)}
+                  className="w-full px-4 py-[8px] rounded-lg text-[#293552] text-[11px] border focus:ring-1 focus:ring-[#293552] focus:outline-none bg-gray-50"
+                >
+                  {timeZones.map((tz) => (
+                    <option key={tz} value={tz}>
+                      {tz}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="flex justify-center mt-4">
                 <button
                   type="button"
