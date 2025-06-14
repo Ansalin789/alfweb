@@ -143,7 +143,7 @@ const MultiStepForm = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5001/ac/availabletime?scheduleDate=${scheduleDate}`
+        `https://api.blackstoneinfomaticstech.com/ac/availabletime?scheduleDate=${scheduleDate}`
       );
       const data = await response.json();
 
@@ -290,7 +290,10 @@ const MultiStepForm = () => {
         createdBy: "SYSTEM",
         lastUpdatedBy: "SYSTEM",
         timeZone: timeZone,
-        academicCoachId: availableTimes[selectedCoachIndex].academicCoachId,
+        academicCoach:{
+          academicCoachId: availableTimes[selectedCoachIndex].academicCoachId,
+        }
+        
       };
 
       console.log("Form data with AC ID:", formattedData);
