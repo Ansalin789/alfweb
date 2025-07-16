@@ -296,18 +296,7 @@ const HiringForm = ({ onClose }) => {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
               />
             </div>
-            <div>
-              <label className="block mb-1 text-black">
-                Last Name
-              </label>
-              <input
-                name="lastName"
-                value={addApplicantForm.lastName}
-                onChange={handleChange}
-                type="text"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
-              />
-            </div>
+            
             <div>
               <label className="block mb-1 text-black">
                 Email
@@ -320,6 +309,7 @@ const HiringForm = ({ onClose }) => {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
               />
             </div>
+
             <div>
               <label className="block mb-1 text-black">
                 Country
@@ -338,6 +328,24 @@ const HiringForm = ({ onClose }) => {
                 ))}
               </select>
             </div>
+            <div>
+              <label className="block mb-1 text-black">
+                Expected Salary / Hour
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-gray-900">
+                  $
+                </span>
+                <input
+                  name="expectedSalary"
+                  value={addApplicantForm.expectedSalary}
+                  onChange={handleChange}
+                  type="number"
+                  className="w-full border border-gray-300 pl-4 rounded-lg px-3 py-2 text-xs text-black"
+                />
+              </div>
+            </div>
+            
             <div>
               <label className="block mb-1 text-black">
                 Position Applied
@@ -366,9 +374,37 @@ const HiringForm = ({ onClose }) => {
                 name="phone"
                 value={addApplicantForm.phone}
                 onChange={handleChange}
+                type="number"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
+              />
+            </div>
+            <div>
+              <label className="block mb-1 text-black">
+                Last Name
+              </label>
+              <input
+                name="lastName"
+                value={addApplicantForm.lastName}
+                onChange={handleChange}
                 type="text"
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
               />
+            </div>
+            
+            <div>
+              <label className="block mb-1 text-black">
+                Gender
+              </label>
+              <select
+                name="gender"
+                value={addApplicantForm.gender}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
             </div>
             <div>
               <label className="block mb-1 text-black">
@@ -388,38 +424,7 @@ const HiringForm = ({ onClose }) => {
                 ))}
               </select>
             </div>
-            <div>
-              <label className="block mb-1 text-black">
-                Gender
-              </label>
-              <select
-                name="gender"
-                value={addApplicantForm.gender}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
-              >
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-            <div>
-              <label className="block mb-1 text-black">
-                Expected Salary / Hour
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-gray-900">
-                  $
-                </span>
-                <input
-                  name="expectedSalary"
-                  value={addApplicantForm.expectedSalary}
-                  onChange={handleChange}
-                  type="number"
-                  className="w-full border border-gray-300 pl-4 rounded-lg px-3 py-2 text-xs text-black"
-                />
-              </div>
-            </div>
+            
             <div>
               <label className="block mb-1 text-black">
                 Preferred Working Hours
