@@ -41,6 +41,31 @@ const HiringForm = ({ onClose }) => {
   const [success, setSuccess] = useState(false);
   const [failed, setFailed] = useState(false);
   const [failedMessage, setFailedMessage] = useState("");
+  const [startTime, setStartTime] = useState("");
+const [endTime, setEndTime] = useState("");
+
+const updateWorkingHours = (start, end) => {
+  const value = start && end ? `${start} - ${end}` : "";
+  handleChange({
+    target: {
+      name: "workingHours",
+      value,
+    },
+  });
+};
+
+const handleStartTimeChange = (e) => {
+  const value = e.target.value;
+  setStartTime(value);
+  updateWorkingHours(value, endTime);
+};
+
+const handleEndTimeChange = (e) => {
+  const value = e.target.value;
+  setEndTime(value);
+  updateWorkingHours(startTime, value);
+};
+
 
   const handleChange1 = (index, field, value) => {
     const newExperiences = [...experiences];
@@ -426,17 +451,25 @@ const HiringForm = ({ onClose }) => {
             </div>
             
             <div>
-              <label className="block mb-1 text-black">
-                Preferred Working Hours
-              </label>
-              <input
-                name="workingHours"
-                value={addApplicantForm.workingHours}
-                onChange={handleChange}
-                type="text"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
-              />
-            </div>
+  <label className="block mb-1 text-black">
+    Preferred Working Hours
+  </label>
+  <div className="flex gap-2">
+    <input
+      type="time"
+      value={startTime}
+      onChange={handleStartTimeChange}
+      className="w-1/2 border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
+    />
+    <input
+      type="time"
+      value={endTime}
+      onChange={handleEndTimeChange}
+      className="w-1/2 border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
+    />
+  </div>
+</div>
+
             <div>
               <label className="block mb-2 text-black">
                 Upload Resume
