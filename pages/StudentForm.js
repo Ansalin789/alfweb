@@ -9,8 +9,7 @@ import Image from "next/image";
 import en from "react-phone-number-input/locale/en.json";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { CountryDropdown } from "react-country-region-selector";
-
+import { Country, State, City } from "country-state-city";
 // Replace TypeScript types with JSDoc type definitions
 /**
  * @typedef {Date | null} ValuePiece
@@ -31,10 +30,9 @@ const MultiStepForm = () => {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [country, setCountry] = useState("USA");
-  const [cities, setCities] = useState([]);
-  const [city, setCity] = useState("");
-  const [timeZone, setTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [timeZone, setTimeZone] = useState(
+    Intl.DateTimeFormat().resolvedOptions().timeZone
+  );
   const countriesCities = require("countries-cities");
 
   // Basic Information States
@@ -69,6 +67,48 @@ const MultiStepForm = () => {
 
   const [selectedACId, setSelectedACId] = useState(null);
 
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]); // Optional if you want to manage states but needed to get cities
+  const [cities, setCities] = useState([]); // Keep this state
+  const [country, setCountry] = useState("USA"); // Default country
+  const [city, setCity] = useState("");
+
+  // Load countries once
+  useEffect(() => {
+    const allCountries = Country.getAllCountries();
+    setCountries(allCountries);
+  }, []);
+
+  // Load states and cities when country changes
+  useEffect(() => {
+    if (country) {
+      const selectedCountry = countries.find(
+        (c) => c.name === country || c.isoCode === country
+      );
+
+      if (selectedCountry) {
+        // Get all states of the selected country
+        const allStates = State.getStatesOfCountry(selectedCountry.isoCode);
+        setStates(allStates);
+
+        // Collect cities from all states
+        const allCities = allStates.flatMap((state) =>
+          City.getCitiesOfState(selectedCountry.isoCode, state.isoCode)
+        );
+
+        // If you want only city names in the dropdown
+        const cityNames = allCities.map((city) => city.name);
+
+        setCities(cityNames);
+        setCity(""); // reset city when country changes
+      } else {
+        setCities([]);
+        setStates([]);
+        setCity("");
+      }
+    }
+  }, [country, countries]);
+
   const toggleSlot = (index) => {
     if (openSlotIndex === index) {
       setOpenSlotIndex(null);
@@ -90,7 +130,6 @@ const MultiStepForm = () => {
   };
 
   const [availableTimes, setAvailableTimes] = useState([]);
-
 
   const generateReferralId = () => {
     const specialChars = "ALF-REFID-";
@@ -133,7 +172,8 @@ const MultiStepForm = () => {
       loadAvailableTimes(formattedDate); // pass the date to loadAvailableTimes
     }
   };
-  const selectedCoach = selectedCoachIndex !== null ? availableTimes[selectedCoachIndex] : null;
+  const selectedCoach =
+    selectedCoachIndex !== null ? availableTimes[selectedCoachIndex] : null;
 
   const loadAvailableTimes = async (scheduleDate) => {
     if (!scheduleDate) {
@@ -148,14 +188,14 @@ const MultiStepForm = () => {
       const data = await response.json();
 
       console.log("Raw API response:", data);
-      
+
       // Map over the array of coaches and only keep start times
-      const uniqueCoaches = data.map(coach => ({
+      const uniqueCoaches = data.map((coach) => ({
         academicCoachId: coach.academicCoachId,
-        availableSlots: coach.availableSlots.map(slot => ({
+        availableSlots: coach.availableSlots.map((slot) => ({
           start: slot.start,
-          end: slot.end
-        }))
+          end: slot.end,
+        })),
       }));
 
       setAvailableTimes(uniqueCoaches);
@@ -164,9 +204,6 @@ const MultiStepForm = () => {
       setAvailableTimes([]);
     }
   };
-
-
-
 
   const validateStep1 = () => {
     if (!firstName.trim() || firstName.length < 3) {
@@ -259,11 +296,10 @@ const MultiStepForm = () => {
       function formatDateLocal(date) {
         // Returns yyyy-mm-dd in local time
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
         return `${year}-${month}-${day}`;
       }
-
 
       const formattedData = {
         id: uuidv4(),
@@ -290,10 +326,9 @@ const MultiStepForm = () => {
         createdBy: "SYSTEM",
         lastUpdatedBy: "SYSTEM",
         timeZone: timeZone,
-        academicCoach:{
+        academicCoach: {
           academicCoachId: availableTimes[selectedCoachIndex].academicCoachId,
-        }
-        
+        },
       };
 
       console.log("Form data with AC ID:", formattedData);
@@ -301,15 +336,18 @@ const MultiStepForm = () => {
 
       // Debug log to check the data being sent
       console.log("Sending data:", formattedData);
-      const response = await fetch(`https://api.blackstoneinfomaticstech.com/student`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(formattedData, null, 2),
-        mode: "cors",
-      });
+      const response = await fetch(
+        `https://api.blackstoneinfomaticstech.com/student`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(formattedData, null, 2),
+          mode: "cors",
+        }
+      );
 
       // Log the raw response
       console.log("Raw response:", response);
@@ -331,7 +369,8 @@ const MultiStepForm = () => {
     } catch (error) {
       console.error("Submission error:", error);
       alert(
-        `Failed to submit form: ${error instanceof Error ? error.message : "Unknown error"
+        `Failed to submit form: ${
+          error instanceof Error ? error.message : "Unknown error"
         }`
       );
     } finally {
@@ -368,22 +407,23 @@ const MultiStepForm = () => {
 
   const calculatePreferredToTime = (fromTime) => {
     for (const coach of allSlots) {
-      const match = coach.availableSlots.find(slot => slot.start === fromTime);
+      const match = coach.availableSlots.find(
+        (slot) => slot.start === fromTime
+      );
       if (match) return match.end;
     }
     return ""; // fallback
   };
 
-
-  useEffect(() => {
-    const fetchedCities = countriesCities.getCities(country);
-    setCities(fetchedCities);
-    setCity("");
-  }, [country]);
+  // useEffect(() => {
+  //   const fetchedCities = countriesCities.getCities(country);
+  //   setCities(fetchedCities);
+  //   setCity("");
+  // }, [country]);
 
   useEffect(() => {
     // Get all available time zones
-    const timeZones = Intl.supportedValuesOf('timeZone');
+    const timeZones = Intl.supportedValuesOf("timeZone");
     setTimeZones(timeZones);
   }, []);
 
@@ -394,7 +434,9 @@ const MultiStepForm = () => {
       <div className="w-full max-w-[100%] sm:max-w-[40%] mx-auto justify-center p-4 sm:p-6 align-middle rounded-br-[20px] rounded-tl-[20px] rounded-bl-[20px] rounded-tr-[20px] shadow-md bg-gradient-to-r from-[#fff] via-[#f8f8f8] to-[#fff]">
         <div className="flex justify-between items-center mb-2">
           <div className="text-xs sm:text-sm font-medium">Complete 3 Steps</div>
-          <div className="text-xs sm:text-sm font-medium">{step * 33.4.toFixed(0)}%</div>
+          <div className="text-xs sm:text-sm font-medium">
+            {step * (33.4).toFixed(0)}%
+          </div>
         </div>
         <div className="w-full bg-[#dfdfdf] rounded-full h-2.5 mb-0">
           <div
@@ -406,11 +448,21 @@ const MultiStepForm = () => {
         <form onSubmit={handleSubmit}>
           {step === 1 && (
             <div>
-              <div className='flex justify-center align-middle p-4 mb-4 gap-2'>
-                <Image src="/assets/img/alf1.png" width={150} height={150} className='bg-cover bg-center w-8 h-12' alt='logo' />
+              <div className="flex justify-center align-middle p-4 mb-4 gap-2">
+                <Image
+                  src="/assets/img/alf1.png"
+                  width={150}
+                  height={150}
+                  className="bg-cover bg-center w-8 h-12"
+                  alt="logo"
+                />
                 <div className="text-white mt-2">
-                  <h3 className="font-bold text-[21px] text-[#273754]">AL FURQAN</h3>
-                  <h4 className="font-medium text-[19px] justify-end ml-8 -mt-2 font-sans text-[#F992A9]">academy</h4>
+                  <h3 className="font-bold text-[21px] text-[#273754]">
+                    AL FURQAN
+                  </h3>
+                  <h4 className="font-medium text-[19px] justify-end ml-8 -mt-2 font-sans text-[#F992A9]">
+                    academy
+                  </h4>
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4">
@@ -452,7 +504,9 @@ const MultiStepForm = () => {
               </div>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label htmlFor="Email" className="text-[14px] text-[#293453]">Email</label>
+                  <label htmlFor="Email" className="text-[14px] text-[#293453]">
+                    Email
+                  </label>
                   <br />
                   <input
                     type="email"
@@ -503,7 +557,6 @@ const MultiStepForm = () => {
                       backgroundColor: "rgb(249,250,251)",
                       borderColor: "#e5e7eb",
                       fontSize: "9px",
-
                     }}
                     inputStyle={{
                       backgroundColor: "rgb(249,250,251)",
@@ -521,19 +574,26 @@ const MultiStepForm = () => {
                   >
                     Country
                   </label>
-                  <CountryDropdown
+                  <select
                     value={country}
-                    onChange={(val) => {
-                      setCountry(val);
-                    }}
-                    className="w-full px-4 py-[8px] placeholder:text-[12px] rounded-lg text-[11px] text-[#293552] border focus:ring-1 focus:ring-[#293552] focus:outline-none bg-gray-50"
-                  />
+                    onChange={(e) => setCountry(e.target.value)}
+                    className="w-full px-4 py-[8px] rounded-lg text-[#293552] text-[11px] border  focus:ring-1 focus:ring-[#293552] focus:outline-none bg-gray-50"
+                  >
+                    <option value="">Select Country</option>
+                    {countries.map((c) => (
+                      <option key={c.isoCode} value={c.name}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-6 mb-[12px]">
                 <div>
-                  <label htmlFor="City" className="text-[14px] text-[#293453]">City</label>
+                  <label htmlFor="City" className="text-[14px] text-[#293453]">
+                    City
+                  </label>
                   <select
                     id="city"
                     value={city}
@@ -541,7 +601,7 @@ const MultiStepForm = () => {
                     className="w-full px-4 py-[8px] rounded-lg text-[#293552] text-[11px] border  focus:ring-1 focus:ring-[#293552] focus:outline-none bg-gray-50"
                   >
                     <option value="">Select a city</option>
-                    {cities?.map((cityName) => (
+                    {cities.map((cityName) => (
                       <option key={cityName} value={cityName}>
                         {cityName}
                       </option>
@@ -569,7 +629,12 @@ const MultiStepForm = () => {
               </div>
 
               <div className="mb-[12px]">
-                <label htmlFor="Time Zone" className="text-[14px] text-[#293453]">Time Zone</label>
+                <label
+                  htmlFor="Time Zone"
+                  className="text-[14px] text-[#293453]"
+                >
+                  Time Zone
+                </label>
                 <select
                   id="timeZone"
                   value={timeZone}
@@ -593,7 +658,6 @@ const MultiStepForm = () => {
                   Next
                 </button>
               </div>
-
             </div>
           )}
 
@@ -619,10 +683,11 @@ const MultiStepForm = () => {
                       // Set the selected learning interest
                       setLearningInterest([option]); // Set the selected option as the only interest
                     }}
-                    className={`hover:transition-all duration-500 ease-in-out rounded-xl p-3 text-black shadow-sm ${learningInterest[0] === option
-                      ? "bg-[#0c13752e] font-semibold"
-                      : "bg-gray-100"
-                      }`}
+                    className={`hover:transition-all duration-500 ease-in-out rounded-xl p-3 text-black shadow-sm ${
+                      learningInterest[0] === option
+                        ? "bg-[#0c13752e] font-semibold"
+                        : "bg-gray-100"
+                    }`}
                   >
                     {option}
                   </button>
@@ -651,16 +716,17 @@ const MultiStepForm = () => {
               <h2 className="text-[14px] text-center font-bold mb-4 text-[#293552]">
                 Which teacher would you like?
               </h2>
-              <div className="grid grid-cols-3 gap-4 mb-10 text-[11px]">
-                {["Male", "Female", "Either"].map((preference) => (
+              <div className="grid grid-cols-2 gap-4 mb-10 text-[11px]">
+                {["Male", "Female"].map((preference) => (
                   <button
                     key={preference}
                     type="button"
                     onClick={() => setPreferredTeacher(preference)}
-                    className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${preferredTeacher === preference
-                      ? "bg-[#0c13752e] font-semibold"
-                      : "bg-gray-100"
-                      }`}
+                    className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${
+                      preferredTeacher === preference
+                        ? "bg-[#0c13752e] font-semibold"
+                        : "bg-gray-100"
+                    }`}
                   >
                     {preference}
                   </button>
@@ -678,10 +744,11 @@ const MultiStepForm = () => {
                         key={source}
                         type="button"
                         onClick={() => setReferralSource(source)}
-                        className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${referralSource === source
-                          ? "bg-[#0c13752e] font-semibold"
-                          : "bg-gray-100"
-                          }`}
+                        className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${
+                          referralSource === source
+                            ? "bg-[#0c13752e] font-semibold"
+                            : "bg-gray-100"
+                        }`}
                       >
                         {source}
                       </button>
@@ -785,7 +852,7 @@ const MultiStepForm = () => {
                     minDate={new Date()}
                     tileClassName={({ date, view }) =>
                       view === "month" &&
-                        date.toDateString() === startDate.toDateString()
+                      date.toDateString() === startDate.toDateString()
                         ? "selected-date"
                         : null
                     }
@@ -832,7 +899,8 @@ const MultiStepForm = () => {
                                     setSelectedCoachIndex(index);
                                   }}
                                   className={`p-2 rounded-lg text-center ${
-                                    preferredFromTime === slot.start && selectedCoachIndex === index
+                                    preferredFromTime === slot.start &&
+                                    selectedCoachIndex === index
                                       ? "bg-gray-600 text-white"
                                       : "bg-gray-200 hover:bg-gray-400"
                                   }`}
@@ -841,7 +909,9 @@ const MultiStepForm = () => {
                                 </button>
                               ))
                             ) : (
-                              <div className="col-span-2 text-center text-gray-500">No available slots</div>
+                              <div className="col-span-2 text-center text-gray-500">
+                                No available slots
+                              </div>
                             )}
                           </div>
                         )}
@@ -855,8 +925,9 @@ const MultiStepForm = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`justify-center mt-6 sm:mt-8 text-[12px] sm:text-[14px] p-2 align-middle py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-[10px] shadow-lg flex ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                  className={`justify-center mt-6 sm:mt-8 text-[12px] sm:text-[14px] p-2 align-middle py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-[10px] shadow-lg flex ${
+                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center">
@@ -887,12 +958,8 @@ const MultiStepForm = () => {
                   )}
                 </button>
               </div>
-
-
             </div>
           )}
-
-
         </form>
       </div>
     </div>
