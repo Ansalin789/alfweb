@@ -4,8 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Country, State, City } from "country-state-city";
 import { Paperclip } from "lucide-react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const HiringForm = ({ onClose }) => {
+  const router = useRouter();
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
   const [experiences, setExperiences] = useState([
@@ -42,30 +44,29 @@ const HiringForm = ({ onClose }) => {
   const [failed, setFailed] = useState(false);
   const [failedMessage, setFailedMessage] = useState("");
   const [startTime, setStartTime] = useState("");
-const [endTime, setEndTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
-const updateWorkingHours = (start, end) => {
-  const value = start && end ? `${start} - ${end}` : "";
-  handleChange({
-    target: {
-      name: "workingHours",
-      value,
-    },
-  });
-};
+  const updateWorkingHours = (start, end) => {
+    const value = start && end ? `${start} - ${end}` : "";
+    handleChange({
+      target: {
+        name: "workingHours",
+        value,
+      },
+    });
+  };
 
-const handleStartTimeChange = (e) => {
-  const value = e.target.value;
-  setStartTime(value);
-  updateWorkingHours(value, endTime);
-};
+  const handleStartTimeChange = (e) => {
+    const value = e.target.value;
+    setStartTime(value);
+    updateWorkingHours(value, endTime);
+  };
 
-const handleEndTimeChange = (e) => {
-  const value = e.target.value;
-  setEndTime(value);
-  updateWorkingHours(startTime, value);
-};
-
+  const handleEndTimeChange = (e) => {
+    const value = e.target.value;
+    setEndTime(value);
+    updateWorkingHours(startTime, value);
+  };
 
   const handleChange1 = (index, field, value) => {
     const newExperiences = [...experiences];
@@ -93,7 +94,11 @@ const handleEndTimeChange = (e) => {
 
   const canAddNewForm = experiences.every(
     (exp) =>
-      exp.jobRole && exp.organizationName && exp.jobLocation && exp.fromDate && exp.toDate
+      exp.jobRole &&
+      exp.organizationName &&
+      exp.jobLocation &&
+      exp.fromDate &&
+      exp.toDate
   );
 
   function handleChange(event) {
@@ -126,6 +131,30 @@ const handleEndTimeChange = (e) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Example validation:
+    if (!addApplicantForm.firstName.trim()) {
+      setFailedMessage("Please enter your First Name.");
+      setSuccess(false);
+      return;
+    }
+    if (!addApplicantForm.lastName.trim()) {
+      setFailedMessage("Please enter your Last Name.");
+      setSuccess(false);
+      return;
+    }
+    if (!addApplicantForm.email.trim()) {
+      setFailedMessage("Please enter your Email.");
+      setSuccess(false);
+      return;
+    }
+    if (!addApplicantForm.phone.trim()) {
+      setFailedMessage("Please enter your Phone Number.");
+      setSuccess(false);
+      return;
+    }
+
+    setFailedMessage("");
+
     const formData = new FormData();
     formData.append("applicationDate", addApplicantForm.applicationDate);
     formData.append("candidateFirstName", addApplicantForm.firstName);
@@ -151,7 +180,6 @@ const handleEndTimeChange = (e) => {
     }
 
     try {
-
       const response = await axios.post(
         "https://api.blackstoneinfomaticstech.com/recruit",
         formData,
@@ -161,11 +189,11 @@ const handleEndTimeChange = (e) => {
           },
         }
       );
+      console.log("Response:", response);
 
       if ([200, 201].includes(response.status)) {
         setSuccess(true);
         setFailedMessage("");
-        setTimeout(() => setSuccess(false), 3000);
         setAddApplicantForm({
           applicationDate: new Date().toISOString().split("T")[0],
           firstName: "",
@@ -184,7 +212,10 @@ const handleEndTimeChange = (e) => {
           resume: null,
           comment: "",
         });
-        onClose();
+        setTimeout(() => {
+          setSuccess(false);
+            router.push("/");
+        }, 3000);
       }
     } catch (err) {
       const status = err.response?.status;
@@ -249,50 +280,14 @@ const handleEndTimeChange = (e) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-25 backdrop-blur-sm z-50 p-6">
+    <form
+      onSubmit={handleSubmit}
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-25 backdrop-blur-sm z-50 p-6"
+    >
       <div className="bg-[#fff] rounded-lg shadow-xl p-6 w-full max-w-4xl h-full overflow-y-auto scrollbar-none overflow-auto hide-scrollbar mx-3 text-sm">
         <h1 className="text-lg font-semibold mt-2 text-black mb-3">
           Add Applicant
         </h1>
-
-        {/* Success Message */}
-        {success && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <strong className="font-bold">Success!</strong>
-            <span className="block sm:inline"> Applicant added successfully!</span>
-            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
-              <svg
-                onClick={() => setSuccess(false)}
-                className="fill-current h-6 w-6 text-green-500 cursor-pointer"
-                role="button"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <title>Close</title>
-                <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15L6.303 6.097a1.2 1.2 0 0 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.15 2.758 3.151a1.2 1.2 0 0 1 0 1.697z" />
-              </svg>
-            </span>
-          </div>
-        )}
-
-        {failedMessage && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <strong className="font-bold">Error!</strong>
-            <span className="block sm:inline"> {failedMessage}</span>
-            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
-              <svg
-                onClick={() => setFailedMessage("")}
-                className="fill-current h-6 w-6 text-red-500 cursor-pointer"
-                role="button"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <title>Close</title>
-                <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15L6.303 6.097a1.2 1.2 0 0 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.15 2.758 3.151a1.2 1.2 0 0 1 0 1.697z" />
-              </svg>
-            </span>
-          </div>
-        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Left Column */}
@@ -310,9 +305,7 @@ const handleEndTimeChange = (e) => {
               />
             </div>
             <div>
-              <label className="block mb-1 text-black">
-                First Name
-              </label>
+              <label className="block mb-1 text-black">First Name</label>
               <input
                 name="firstName"
                 value={addApplicantForm.firstName}
@@ -321,11 +314,9 @@ const handleEndTimeChange = (e) => {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
               />
             </div>
-            
+
             <div>
-              <label className="block mb-1 text-black">
-                Email
-              </label>
+              <label className="block mb-1 text-black">Email</label>
               <input
                 name="email"
                 value={addApplicantForm.email}
@@ -336,9 +327,7 @@ const handleEndTimeChange = (e) => {
             </div>
 
             <div>
-              <label className="block mb-1 text-black">
-                Country
-              </label>
+              <label className="block mb-1 text-black">Country</label>
               <select
                 name="country"
                 value={addApplicantForm.country}
@@ -370,11 +359,9 @@ const handleEndTimeChange = (e) => {
                 />
               </div>
             </div>
-            
+
             <div>
-              <label className="block mb-1 text-black">
-                Position Applied
-              </label>
+              <label className="block mb-1 text-black">Position Applied</label>
               <select
                 name="position"
                 value={addApplicantForm.position}
@@ -392,9 +379,7 @@ const handleEndTimeChange = (e) => {
           {/* Right Column */}
           <div className="space-y-3">
             <div>
-              <label className="block mb-1 text-black">
-                Phone Number
-              </label>
+              <label className="block mb-1 text-black">Phone Number</label>
               <input
                 name="phone"
                 value={addApplicantForm.phone}
@@ -404,9 +389,7 @@ const handleEndTimeChange = (e) => {
               />
             </div>
             <div>
-              <label className="block mb-1 text-black">
-                Last Name
-              </label>
+              <label className="block mb-1 text-black">Last Name</label>
               <input
                 name="lastName"
                 value={addApplicantForm.lastName}
@@ -415,11 +398,9 @@ const handleEndTimeChange = (e) => {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
               />
             </div>
-            
+
             <div>
-              <label className="block mb-1 text-black">
-                Gender
-              </label>
+              <label className="block mb-1 text-black">Gender</label>
               <select
                 name="gender"
                 value={addApplicantForm.gender}
@@ -432,9 +413,7 @@ const handleEndTimeChange = (e) => {
               </select>
             </div>
             <div>
-              <label className="block mb-1 text-black">
-                City
-              </label>
+              <label className="block mb-1 text-black">City</label>
               <select
                 name="city"
                 value={addApplicantForm.city}
@@ -449,31 +428,29 @@ const handleEndTimeChange = (e) => {
                 ))}
               </select>
             </div>
-            
-            <div>
-  <label className="block mb-1 text-black">
-    Preferred Working Hours
-  </label>
-  <div className="flex gap-2">
-    <input
-      type="time"
-      value={startTime}
-      onChange={handleStartTimeChange}
-      className="w-1/2 border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
-    />
-    <input
-      type="time"
-      value={endTime}
-      onChange={handleEndTimeChange}
-      className="w-1/2 border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
-    />
-  </div>
-</div>
 
             <div>
-              <label className="block mb-2 text-black">
-                Upload Resume
+              <label className="block mb-1 text-black">
+                Preferred Working Hours
               </label>
+              <div className="flex gap-2">
+                <input
+                  type="time"
+                  value={startTime}
+                  onChange={handleStartTimeChange}
+                  className="w-1/2 border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
+                />
+                <input
+                  type="time"
+                  value={endTime}
+                  onChange={handleEndTimeChange}
+                  className="w-1/2 border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block mb-2 text-black">Upload Resume</label>
               <div className="flex items-center gap-2">
                 <label
                   htmlFor="resumeUpload"
@@ -501,9 +478,7 @@ const handleEndTimeChange = (e) => {
 
         {/* Skills Section */}
         <div className="mt-4">
-          <label className="block mb-1 text-black">
-            Skills
-          </label>
+          <label className="block mb-1 text-black">Skills</label>
           <input
             name="skills"
             value={addApplicantForm.skills}
@@ -553,7 +528,9 @@ const handleEndTimeChange = (e) => {
                   placeholder="Role"
                   className="w-full mb-2 px-3 py-2 border border-gray-300 rounded-lg text-xs text-black"
                   value={exp.jobRole}
-                  onChange={(e) => handleChange1(index, "jobRole", e.target.value)}
+                  onChange={(e) =>
+                    handleChange1(index, "jobRole", e.target.value)
+                  }
                 />
                 <input
                   placeholder="Organization"
@@ -617,9 +594,7 @@ const handleEndTimeChange = (e) => {
 
         {/* Comments Section */}
         <div className="mt-4">
-          <label className="block mb-1 text-black">
-            Comments
-          </label>
+          <label className="block mb-1 text-black">Comments</label>
           <textarea
             name="comment"
             value={addApplicantForm.comment}
@@ -647,7 +622,83 @@ const handleEndTimeChange = (e) => {
           </button>
         </div>
       </div>
-    </div>
+
+      <>
+        {/* Success Popup Modal */}
+        {success && (
+          <div className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-30">
+            <div className="bg-white p-6 rounded-xl max-w-xs w-full text-center shadow-lg">
+              <div className="mx-auto mb-3 h-10 w-10 rounded-full bg-green-500 flex items-center justify-center text-white">
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-lg font-bold mb-2 text-gray-900">
+                Added successfully
+              </h2>
+              <p className="text-gray-600 mb-4">
+                You have successfully added the applicant.
+              </p>
+              <div className="h-1 w-12 bg-green-500 rounded mx-auto mb-4"></div>
+              <button
+                onClick={() => {
+                  setSuccess(false);
+                  router.push("/");
+                }}
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Error Popup Modal */}
+        {failedMessage && (
+          <div className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-30">
+            <div className="bg-white p-6 rounded-xl max-w-xs w-full text-center shadow-lg relative">
+              <div className="mx-auto mb-3 h-10 w-10 rounded-full bg-red-500 flex items-center justify-center text-white">
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-lg font-bold mb-2 text-gray-900">Error!</h2>
+              <p className="text-gray-600 mb-4">{failedMessage}</p>
+              <div className="h-1 w-12 bg-red-500 rounded mx-auto mb-4"></div>
+              <button
+                onClick={() => {
+                  setFailedMessage("");
+                  router.push("/");
+                }}
+                className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </>
+    </form>
   );
 };
 
