@@ -56,17 +56,58 @@ const HiringForm = ({ onClose }) => {
     });
   };
 
-  const handleStartTimeChange = (e) => {
-    const value = e.target.value;
-    setStartTime(value);
-    updateWorkingHours(value, endTime);
-  };
+const handleStartTimeChange = (e) => {
+  const value = e.target.value;
+  if (!value) return;
 
-  const handleEndTimeChange = (e) => {
-    const value = e.target.value;
-    setEndTime(value);
-    updateWorkingHours(startTime, value);
-  };
+  const [hours, minutes] = value.split(":").map(Number);
+
+  // Snap minutes to 00 or 30
+  const adjustedMinutes = minutes < 30 ? "00" : "30";
+  const adjustedTime = `${String(hours).padStart(2, "0")}:${adjustedMinutes}`;
+
+  setStartTime(adjustedTime);
+  updateWorkingHours(adjustedTime, endTime);
+};
+
+const handleEndTimeChange = (e) => {
+  const value = e.target.value;
+  if (!value) return;
+
+  const [hours, minutes] = value.split(":").map(Number);
+  const adjustedMinutes = minutes < 30 ? "00" : "30";
+  const adjustedTime = `${String(hours).padStart(2, "0")}:${adjustedMinutes}`;
+
+  setEndTime(adjustedTime);
+  updateWorkingHours(startTime, adjustedTime);
+};
+
+const [fromHour, setFromHour] = useState("");
+const [fromMinute, setFromMinute] = useState("");
+const [toHour, setToHour] = useState("");
+const [toMinute, setToMinute] = useState("");
+
+const handleTimeChange1 = (hour, minute) => {
+  setFromHour(hour);
+  setFromMinute(minute);
+
+  const from = hour && minute ? `${hour}:${minute}` : "";
+  const to = toHour && toMinute ? `${toHour}:${toMinute}` : "";
+
+  updateWorkingHours(from, to); // keep backend field updated
+};
+
+const handleTimeChange2 = (hour, minute) => {
+  setToHour(hour);
+  setToMinute(minute);
+
+  const from = fromHour && fromMinute ? `${fromHour}:${fromMinute}` : "";
+  const to = hour && minute ? `${hour}:${minute}` : "";
+
+  updateWorkingHours(from, to);
+};
+
+
 
   const handleChange1 = (index, field, value) => {
     const newExperiences = [...experiences];
@@ -214,7 +255,7 @@ const HiringForm = ({ onClose }) => {
         });
         setTimeout(() => {
           setSuccess(false);
-            router.push("/");
+          router.push("/");
         }, 3000);
       }
     } catch (err) {
@@ -429,25 +470,85 @@ const HiringForm = ({ onClose }) => {
               </select>
             </div>
 
-            <div>
-              <label className="block mb-1 text-black">
-                Preferred Working Hours
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="time"
-                  value={startTime}
-                  onChange={handleStartTimeChange}
-                  className="w-1/2 border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
-                />
-                <input
-                  type="time"
-                  value={endTime}
-                  onChange={handleEndTimeChange}
-                  className="w-1/2 border border-gray-300 rounded-lg px-3 py-2 text-xs text-black"
-                />
-              </div>
-            </div>
+<div className="">
+  <label className="block mb-1 mt-2 text-black">
+    Preferred Working Hours
+  </label>
+  <div className="flex items-center gap-4 border border-gray-300 rounded-lg">
+  {/* From Time */}
+  <div className="flex items-center gap-2 ml-2">
+    <label
+      htmlFor="fromTime"
+      className="font-medium text-xs mt-2"
+    >
+      From
+    </label>
+
+    {/* Hours Dropdown */}
+    <select
+      value={fromHour}
+      onChange={(e) => handleTimeChange1(e.target.value, fromMinute)}
+      className="h-6 w-8 text-xs px-2 rounded-[3px] border border-[#4f5154] bg-white/5 appearance-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+    >
+      <option value="">HH</option>
+      {Array.from({ length: 24 }, (_, i) => (
+        <option key={i} value={i.toString().padStart(2, "0")}>
+          {i.toString().padStart(2, "0")}
+        </option>
+      ))}
+    </select>
+
+    {/* Minutes Dropdown */}
+    <select
+      value={fromMinute}
+      onChange={(e) => handleTimeChange1(fromHour, e.target.value)}
+      className="h-6 w-8 text-[10px] px-2 rounded-[3px] border border-[#4f5154] bg-white/5 text-black appearance-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+    >
+      <option value="">MM</option>
+      <option value="00">00</option>
+      <option value="30">30</option>
+    </select>
+  </div>
+  -
+
+  {/* To Time */}
+  <div className="flex items-center gap-2">
+    <label
+      htmlFor="toTime"
+      className="font-medium text-xs mt-2"
+    >
+      to
+    </label>
+
+    {/* Hours Dropdown */}
+    <select
+      value={toHour}
+      onChange={(e) => handleTimeChange2(e.target.value, toMinute)}
+      className="h-6 w-8 text-xs px-2 rounded-[3px] border border-[#4f5154] bg-white/5 appearance-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+    >
+      <option value="">HH</option>
+      {Array.from({ length: 24 }, (_, i) => (
+        <option key={i} value={i.toString().padStart(2, "0")}>
+          {i.toString().padStart(2, "0")}
+        </option>
+      ))}
+    </select>
+
+    {/* Minutes Dropdown */}
+    <select
+      value={toMinute}
+      onChange={(e) => handleTimeChange2(toHour, e.target.value)}
+      className="h-6 w-8 text-xs px-2 rounded-[3px] border border-[#4f5154] bg-white/5 appearance-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+    >
+      <option value="">MM</option>
+      <option value="00">00</option>
+      <option value="30">30</option>
+    </select>
+  </div>
+</div>
+
+</div>
+
 
             <div>
               <label className="block mb-2 text-black">Upload Resume</label>
@@ -582,11 +683,10 @@ const HiringForm = ({ onClose }) => {
             type="button"
             onClick={addExperienceForm}
             disabled={!canAddNewForm}
-            className={`px-4 py-1 rounded-lg text-white ${
-              canAddNewForm
+            className={`px-4 py-1 rounded-lg text-white ${canAddNewForm
                 ? "bg-[#576CBC] hover:bg-blue-700"
                 : "bg-gray-400 cursor-not-allowed"
-            }`}
+              }`}
           >
             Add Another Experience
           </button>
