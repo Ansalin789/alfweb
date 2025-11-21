@@ -7,7 +7,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Image from "next/image";
 import en from "react-phone-number-input/locale/en.json";
-import { useRouter } from "next/navigation";
+import { useRouter ,useSearchParams} from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { Country, State, City } from "country-state-city";
 // Replace TypeScript types with JSDoc type definitions
@@ -29,7 +29,9 @@ const MultiStepForm = () => {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
 
+const refernceby = searchParams.get("refernceId");
   const [timeZone, setTimeZone] = useState(
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
@@ -322,6 +324,7 @@ const MultiStepForm = () => {
         endDate: formatDateLocal(toDate),
         evaluationStatus: "PENDING",
         refernceId: referral,
+        referredBy:refernceby ?? '',
         status: "Active",
         createdBy: "SYSTEM",
         lastUpdatedBy: "SYSTEM",
@@ -613,7 +616,25 @@ const MultiStepForm = () => {
                     htmlFor="Referral Code"
                     className="text-[14px] text-[#293453]"
                   >
-                    Referral Code
+                    Referred by
+                  </label>
+
+                  <br />
+                  <input
+                    type="text"
+                    placeholder="Referral Code"
+                    readOnly
+                    value={refernceby ?? ''}
+                    onChange={(e) => setReferral(e.target.value)}
+                    className={`w-full px-4 py-[8px] border text-[11px] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50`}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="Referral Code"
+                    className="text-[14px] text-[#293453]"
+                  >
+                    Your Referral Code
                   </label>
 
                   <br />
@@ -626,9 +647,7 @@ const MultiStepForm = () => {
                     className={`w-full px-4 py-[8px] border text-[11px] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50`}
                   />
                 </div>
-              </div>
-
-              <div className="mb-[12px]">
+                <div className="mb-[12px]">
                 <label
                   htmlFor="Time Zone"
                   className="text-[14px] text-[#293453]"
@@ -648,6 +667,9 @@ const MultiStepForm = () => {
                   ))}
                 </select>
               </div>
+              </div>
+
+              
 
               <div className="flex justify-center mt-4">
                 <button
