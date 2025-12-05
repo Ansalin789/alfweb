@@ -7,9 +7,11 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Image from "next/image";
 import en from "react-phone-number-input/locale/en.json";
-import { useRouter ,useSearchParams} from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { Country, State, City } from "country-state-city";
+import { IoToggle } from "react-icons/io5";
+import axios from "axios";
 // Replace TypeScript types with JSDoc type definitions
 /**
  * @typedef {Date | null} ValuePiece
@@ -31,11 +33,12 @@ const MultiStepForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
 
-const refernceby = searchParams.get("refernceId");
+  const refernceby = searchParams.get("refernceId");
   const [timeZone, setTimeZone] = useState(
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
   const countriesCities = require("countries-cities");
+const [studentList, setStudentList] = useState([]);
 
   // Basic Information States
   const [firstName, setFirstName] = useState("");
@@ -74,6 +77,9 @@ const refernceby = searchParams.get("refernceId");
   const [cities, setCities] = useState([]); // Keep this state
   const [country, setCountry] = useState("USA"); // Default country
   const [city, setCity] = useState("");
+  const [isActive, setIsActive] = useState(true);
+  const [familyId, setFamilyId] = useState("");
+  const [familyEmail, setFamilyEmail] = useState("");
 
   // Load countries once
   useEffect(() => {
@@ -319,12 +325,14 @@ const refernceby = searchParams.get("refernceId");
         preferredFromTime: preferredFromTime,
         preferredToTime: preferredToTime,
         referralSource: referralSource,
+ familyId: formData.familyId?.trim() || "",
+    familyEmail: formData.familyEmail?.trim() || "", 
         referralDetails: referralSourceOther || referral || "",
         startDate: formatDateLocal(startDate),
         endDate: formatDateLocal(toDate),
         evaluationStatus: "PENDING",
         refernceId: referral,
-        referredBy:refernceby ?? '',
+        referredBy: refernceby ?? '',
         status: "Active",
         createdBy: "SYSTEM",
         lastUpdatedBy: "SYSTEM",
@@ -340,7 +348,7 @@ const refernceby = searchParams.get("refernceId");
       // Debug log to check the data being sent
       console.log("Sending data:", formattedData);
       const response = await fetch(
-        `https://api.blackstoneinfomaticstech.com/student`,
+        `http://localhost:5001/student`,
         {
           method: "POST",
           headers: {
@@ -372,8 +380,7 @@ const refernceby = searchParams.get("refernceId");
     } catch (error) {
       console.error("Submission error:", error);
       alert(
-        `Failed to submit form: ${
-          error instanceof Error ? error.message : "Unknown error"
+        `Failed to submit form: ${error instanceof Error ? error.message : "Unknown error"
         }`
       );
     } finally {
@@ -431,6 +438,68 @@ const refernceby = searchParams.get("refernceId");
   }, []);
 
   const [timeZones, setTimeZones] = useState([]);
+
+const handleFamilyIdChange = (e) => {
+  const id = e.target.value.trim();
+
+  // Always store user input
+  setFormData((prev) => ({
+    ...prev,
+    familyId: id,
+  }));
+
+  if (!id) {
+    // Clear email if input cleared
+    setFormData((prev) => ({
+      ...prev,
+      familyEmail: "",
+    }));
+    return;
+  }
+
+  // Check if familyId exists in student list
+  const match = studentList.find(
+    (item) => item.familyId?.toLowerCase() === id.toLowerCase()
+  );
+
+  if (match) {
+    // Auto-fill familyEmail
+    setFormData((prev) => ({
+      ...prev,
+      familyEmail: match.familyEmail || "",
+    }));
+  } else {
+    // Do NOT auto-create a familyId
+    setFormData((prev) => ({
+      ...prev,
+      familyEmail: "", // user can enter manually
+    }));
+  }
+};
+
+
+
+const handleFamilyEmailChange = (e) => {
+  setFormData((prev) => ({
+    ...prev,
+    familyEmail: e.target.value
+  }));
+};
+
+
+
+
+useEffect(() => {
+  axios.get("http://localhost:5001/studentlist")
+.then((res) => {
+    setStudentList(res.data.students); 
+  })    .catch((err) => console.log(err));
+}, []);
+const [formData, setFormData] = useState({
+  familyId: "",
+  familyEmail: "",
+});
+
 
   return (
     <div className="flex items-center p-2 sm:p-6 min-h-screen bg-gradient-to-r from-[#d9d9da] to-[#d9d9da]">
@@ -647,29 +716,95 @@ const refernceby = searchParams.get("refernceId");
                     className={`w-full px-4 py-[8px] border text-[11px] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50`}
                   />
                 </div>
-                <div className="mb-[12px]">
-                <label
-                  htmlFor="Time Zone"
-                  className="text-[14px] text-[#293453]"
-                >
-                  Time Zone
-                </label>
-                <select
-                  id="timeZone"
-                  value={timeZone}
-                  onChange={(e) => setTimeZone(e.target.value)}
-                  className="w-full px-4 py-[8px] rounded-lg text-[#293552] text-[11px] border focus:ring-1 focus:ring-[#293552] focus:outline-none bg-gray-50"
-                >
-                  {timeZones.map((tz) => (
-                    <option key={tz} value={tz}>
-                      {tz}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              </div>
+                <div>
+                  <label
+                    htmlFor="Time Zone"
+                    className="text-[14px] text-[#293453]"
+                  >
+                    Time Zone
+                  </label>
+                  <select
+                    id="timeZone"
+                    value={timeZone}
+                    onChange={(e) => setTimeZone(e.target.value)}
+                    className="w-full px-4 py-[8px] rounded-lg text-[#293552] text-[11px] border focus:ring-1 focus:ring-[#293552] focus:outline-none bg-gray-50"
+                  >
+                    {timeZones.map((tz) => (
+                      <option key={tz} value={tz}>
+                        {tz}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+               <div>
+  {/* Toggle */}
+  <div>
+    <span
+      className="flex text-sm items-center gap-2 cursor-pointer text-[#293552]"
+      onClick={() => {
+        setIsActive(!isActive);
+
+        if (!isActive) {
+          // Switching to Family ID Mode
+          setFamilyEmail("");
+          setFamilyId("");
+        } else {
+          // Switching back to Manual Email Mode
+          setFamilyId("");
+          setFamilyEmail("");
+        }
+      }}
+    >
+      If you have Family Id (Click here)
+      {isActive ? (
+        <IoToggle size={22} className="text-[#293552]" />
+      ) : (
+        <IoToggle size={22} className="text-gray-400 rotate-180" />
+      )}
+    </span>
+  </div>
+
+  {/* FAMILY ID — only when toggle ON */}
+  {isActive && (
+    <div className="mt-2">
+      <label className="text-[14px] text-[#293453]">Family Id</label>
+      <input
+        type="text"
+        placeholder="Enter Family Id"
+       value={formData.familyId}
+  onChange={handleFamilyIdChange}
+        className="w-full px-4 py-[8px] border text-[11px] rounded-lg 
+        focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50 mb-2"
+      />
+    </div>
+  )}
+
+  {/* FAMILY EMAIL — Always visible, Auto-fill when toggle ON */}
+  <div className="mt-2">
+    <label className="text-[14px] text-[#293453]">Family Email Id</label>
+   <input
+  type="text"
+  placeholder="Family Email Id"
+  value={formData.familyEmail}
+  onChange={(e) =>
+    setFormData((prev) => ({
+      ...prev,
+      familyEmail: e.target.value,
+    }))
+  }
+  className="w-full px-4 py-[8px] border text-[11px] rounded-lg 
+            focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50"
+/>
+  </div>
+</div>
+
+
 
               
+              </div>
+
+
 
               <div className="flex justify-center mt-4">
                 <button
@@ -705,11 +840,10 @@ const refernceby = searchParams.get("refernceId");
                       // Set the selected learning interest
                       setLearningInterest([option]); // Set the selected option as the only interest
                     }}
-                    className={`hover:transition-all duration-500 ease-in-out rounded-xl p-3 text-black shadow-sm ${
-                      learningInterest[0] === option
-                        ? "bg-[#0c13752e] font-semibold"
-                        : "bg-gray-100"
-                    }`}
+                    className={`hover:transition-all duration-500 ease-in-out rounded-xl p-3 text-black shadow-sm ${learningInterest[0] === option
+                      ? "bg-[#0c13752e] font-semibold"
+                      : "bg-gray-100"
+                      }`}
                   >
                     {option}
                   </button>
@@ -744,11 +878,10 @@ const refernceby = searchParams.get("refernceId");
                     key={preference}
                     type="button"
                     onClick={() => setPreferredTeacher(preference)}
-                    className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${
-                      preferredTeacher === preference
-                        ? "bg-[#0c13752e] font-semibold"
-                        : "bg-gray-100"
-                    }`}
+                    className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${preferredTeacher === preference
+                      ? "bg-[#0c13752e] font-semibold"
+                      : "bg-gray-100"
+                      }`}
                   >
                     {preference}
                   </button>
@@ -766,11 +899,10 @@ const refernceby = searchParams.get("refernceId");
                         key={source}
                         type="button"
                         onClick={() => setReferralSource(source)}
-                        className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${
-                          referralSource === source
-                            ? "bg-[#0c13752e] font-semibold"
-                            : "bg-gray-100"
-                        }`}
+                        className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${referralSource === source
+                          ? "bg-[#0c13752e] font-semibold"
+                          : "bg-gray-100"
+                          }`}
                       >
                         {source}
                       </button>
@@ -874,7 +1006,7 @@ const refernceby = searchParams.get("refernceId");
                     minDate={new Date()}
                     tileClassName={({ date, view }) =>
                       view === "month" &&
-                      date.toDateString() === startDate.toDateString()
+                        date.toDateString() === startDate.toDateString()
                         ? "selected-date"
                         : null
                     }
@@ -899,11 +1031,10 @@ const refernceby = searchParams.get("refernceId");
                       <div key={coach.academicCoachId || index}>
                         <button
                           onClick={() => toggleSlot(index)}
-                          className={`w-full text-center px-2 py-2 rounded-full font-semibold ${
-                            openSlotIndex === index
-                              ? "bg-[#293552] text-white"
-                              : "bg-gray-200 hover:bg-gray-400"
-                          }`}
+                          className={`w-full text-center px-2 py-2 rounded-full font-semibold ${openSlotIndex === index
+                            ? "bg-[#293552] text-white"
+                            : "bg-gray-200 hover:bg-gray-400"
+                            }`}
                         >
                           Slot {index + 1}
                         </button>
@@ -920,12 +1051,11 @@ const refernceby = searchParams.get("refernceId");
                                     setPreferredToTime(slot.end);
                                     setSelectedCoachIndex(index);
                                   }}
-                                  className={`p-2 rounded-lg text-center ${
-                                    preferredFromTime === slot.start &&
+                                  className={`p-2 rounded-lg text-center ${preferredFromTime === slot.start &&
                                     selectedCoachIndex === index
-                                      ? "bg-gray-600 text-white"
-                                      : "bg-gray-200 hover:bg-gray-400"
-                                  }`}
+                                    ? "bg-gray-600 text-white"
+                                    : "bg-gray-200 hover:bg-gray-400"
+                                    }`}
                                 >
                                   {slot.start}
                                 </button>
@@ -947,9 +1077,8 @@ const refernceby = searchParams.get("refernceId");
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`justify-center mt-6 sm:mt-8 text-[12px] sm:text-[14px] p-2 align-middle py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-[10px] shadow-lg flex ${
-                    isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={`justify-center mt-6 sm:mt-8 text-[12px] sm:text-[14px] p-2 align-middle py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-[10px] shadow-lg flex ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center">
