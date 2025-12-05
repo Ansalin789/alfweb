@@ -348,7 +348,7 @@ const [studentList, setStudentList] = useState([]);
       // Debug log to check the data being sent
       console.log("Sending data:", formattedData);
       const response = await fetch(
-        `http://localhost:5001/student`,
+        `https://api.blackstoneinfomaticstech.com/student`,
         {
           method: "POST",
           headers: {
@@ -490,7 +490,7 @@ const handleFamilyEmailChange = (e) => {
 
 
 useEffect(() => {
-  axios.get("http://localhost:5001/studentlist")
+  axios.get("https://api.blackstoneinfomaticstech.com/studentlist")
 .then((res) => {
     setStudentList(res.data.students); 
   })    .catch((err) => console.log(err));
