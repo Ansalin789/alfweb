@@ -522,7 +522,7 @@ const [formData, setFormData] = useState({
             <div>
               <div className="flex justify-center align-middle p-4 mb-4 gap-2">
                 <Image
-                  src="/assets/img/blackstonelogo.png"
+                  src="/assets/img/blackstoneAcademy.png"
                   width={150}
                   height={150}
                   className="bg-cover bg-center"
