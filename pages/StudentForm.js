@@ -522,20 +522,20 @@ const [formData, setFormData] = useState({
             <div>
               <div className="flex justify-center align-middle p-4 mb-4 gap-2">
                 <Image
-                  src="/assets/img/alf1.png"
+                  src="/assets/img/blackstonelogo.png"
                   width={150}
                   height={150}
-                  className="bg-cover bg-center w-8 h-12"
+                  className="bg-cover bg-center"
                   alt="logo"
                 />
-                <div className="text-white mt-2">
+                {/* <div className="text-white mt-2">
                   <h3 className="font-bold text-[21px] text-[#273754]">
                     AL FURQAN
                   </h3>
                   <h4 className="font-medium text-[19px] justify-end ml-8 -mt-2 font-sans text-[#F992A9]">
                     academy
                   </h4>
-                </div>
+                </div> */}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4">
                 <div>
