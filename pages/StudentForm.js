@@ -12,7 +12,58 @@ import { v4 as uuidv4 } from "uuid";
 import { Country, State, City } from "country-state-city";
 import { IoToggle } from "react-icons/io5";
 import axios from "axios";
-// Replace TypeScript types with JSDoc type definitions
+import { Package, CreditCard } from "lucide-react";
+
+
+function FloatingPhoneInput({
+  label,
+  value,
+  onChange,
+  country,
+  ...props
+}) {
+  const [focused, setFocused] = useState(false);
+  const isFloating = focused || (value && String(value).length > 0);
+
+  return (
+    <div className="relative w-full">
+      <PhoneInput
+        country={country}
+        value={value}
+        onChange={onChange}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        inputClass="w-full rounded-md border border-gray-300 bg-white pt-4 pb-[20px] text-sm
+                   focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+        containerClass="w-full"
+        buttonStyle={{
+          backgroundColor: "rgb(249,250,251)",
+          borderColor: "#d1d5db",
+          borderRadius: "8px 0 0 8px",
+        }}
+        inputStyle={{
+          width: "100%",
+          borderColor: "#d1d5db",
+          borderRadius: "8px",
+          paddingLeft: "48px"
+        }}
+        placeholder=" "
+        {...props}
+      />
+      <label
+        className={`absolute left-[48px] bg-white px-1 text-sm transition-all duration-200 ease-in-out pointer-events-none z-10
+          ${isFloating
+            ? "top-[-8px] scale-90 text-blue-600 left-3"
+            : "top-3 text-gray-400"}
+        `}
+      >
+        {label}
+      </label>
+    </div>
+  );
+}
+
+
 /**
  * @typedef {Date | null} ValuePiece
  * @typedef {ValuePiece | [ValuePiece, ValuePiece]} Value
@@ -24,8 +75,162 @@ const countryCityMap = {
   us: ["New York", "Los Angeles", "Chicago"],
   ca: ["Toronto", "Vancouver", "Montreal"],
   gb: ["London", "Manchester", "Birmingham"],
-  // Add more countries and their cities as needed
 };
+
+
+function FloatingInput({
+  label,
+  type = "text",
+  value,
+  onChange,
+  required,
+  minLength,
+}) {
+  const [focused, setFocused] = useState(false);
+
+  const isFloating = focused || value?.length > 0;
+
+  return (
+    <div className="relative w-full">
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        required={required}
+        minLength={minLength}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className="w-full rounded-md border border-gray-300 bg-white px-3 pt-3 pb-2 text-sm
+                   focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+      />
+
+      <label
+        className={`absolute left-3 bg-white px-1 text-sm transition-all duration-200 ease-in-out
+          ${isFloating
+            ? "top-[-8px] scale-90 text-blue-600"
+            : "top-3 text-gray-400"}
+        `}
+      >
+        {label}
+      </label>
+    </div>
+  );
+}
+
+
+
+function FloatingSelect({ label, value, onChange, children, className = "" }) {
+  return (
+    <div className={`relative w-full ${className}`}>
+      <select
+        value={value}
+        onChange={onChange}
+        className="peer w-full rounded-md border border-gray-300 bg-white px-3 pt-[13px] pb-[12px] text-sm
+                   focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+      >
+        {children}
+      </select>
+      {/* <label
+          className="absolute left-3 -top-2.5 bg-white px-1 text-sm text-blue-500 transition-all
+                   peer-focus:text-blue-600"
+        >
+          {label}
+        </label> */}
+    </div>
+  );
+}
+
+
+const steps = [
+  { label: "Basic Details" },
+  { label: "Let's get Started" },
+  { label: "Booking Details", icon: Package },
+];
+
+
+function ProgressSidebar({ step }) {
+  return (
+    <div className="hidden md:flex w-[360px] 
+bg-gradient-to-br from-[#D6DBF5] to-[#F4F7FF]
+rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] 
+p-8 flex-col justify-between border-[#fff] border-8"
+>
+
+      <div className="space-y-12 mt-4">
+        {steps.map((item, index) => {
+          const s = index + 1;
+          const active = step === s;
+          const completed = step > s;
+          const Icon = item.icon;
+
+          return (
+            <div key={item.label} className="flex items-start gap-4">
+
+              <div className="flex flex-col items-center">
+                <div
+                  className={`
+                    w-11 h-11 flex items-center justify-center rounded-full border-2 transition-all
+                    ${completed ? "bg-emerald-500 border-emerald-500 text-white" : ""}
+                    ${active && !completed ? "border-blue-600 text-blue-600 bg-blue-50" : ""}
+                    ${!active && !completed ? "border-gray-300 text-gray-400 bg-white" : ""}
+                  `}
+                >
+                  {completed ? (
+                    "✓"
+                  ) : Icon && active ? (
+                    <Icon size={18} />
+                  ) : (
+                    <span className="font-semibold">{s}</span>
+                  )}
+                </div>
+
+                {index !== steps.length - 1 && (
+                  <div
+                    className={`w-[2px] h-16 mt-1 ${completed ? "bg-emerald-500" : "bg-gray-100"
+                      }`}
+                  />
+                )}
+              </div>
+
+              <div>
+                <p className="text-[11px] tracking-wide text-gray-400 font-medium">
+                  STEP {s}
+                </p>
+                <p
+                  className={`text-[15px] font-semibold mt-1 ${active
+                    ? "text-blue-700"
+                    : completed
+                      ? "text-gray-800"
+                      : "text-gray-400"
+                    }`}
+                >
+                  {item.label}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="border rounded-xl p-4 flex items-center gap-4 shadow-sm">
+        <div className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-800 shadow-lg text-gray-800">
+          ?
+        </div>
+        <div>
+          <p className="text-xs text-gray-400">Having troubles?</p>
+<p
+  className="font-semibold text-gray-800 text-sm cursor-pointer"
+  onClick={() => {
+    window.location.href = "tel:9099898878";
+  }}
+>
+  Contact Us
+</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const MultiStepForm = () => {
   const router = useRouter();
@@ -38,9 +243,8 @@ const MultiStepForm = () => {
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
   const countriesCities = require("countries-cities");
-const [studentList, setStudentList] = useState([]);
+  const [studentList, setStudentList] = useState([]);
 
-  // Basic Information States
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -48,10 +252,8 @@ const [studentList, setStudentList] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("");
 
-  // Learning Interest States
   const [learningInterest, setLearningInterest] = useState([]);
   const [iqraUsageOther, setIqraUsageOther] = useState("");
-  // const [numberOfStudents, setNumberOfStudents] = useState("");
   const [preferredTeacher, setPreferredTeacher] = useState("");
   const [referralSource, setReferralSource] = useState("");
   const [referralSourceOther, setReferralSourceOther] = useState("");
@@ -59,63 +261,80 @@ const [studentList, setStudentList] = useState([]);
   const [selectedCoachId, setSelectedCoachId] = useState(null);
   const [allSlots, setAllSlots] = useState([]);
   const [selectedCoachIndex, setSelectedCoachIndex] = useState(null);
-  // Schedule States
   const [startDate, setStartDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [openSlotIndex, setOpenSlotIndex] = useState(null);
-  // Track selected time slot
   const [preferredFromTime, setPreferredFromTime] = useState(null);
   const [preferredToTime, setPreferredToTime] = useState(null);
 
-  // Toggle dropdown open/close
   const [selectedSlotTimes, setSelectedSlotTimes] = useState(null);
 
   const [selectedACId, setSelectedACId] = useState(null);
 
   const [countries, setCountries] = useState([]);
-  const [states, setStates] = useState([]); // Optional if you want to manage states but needed to get cities
-  const [cities, setCities] = useState([]); // Keep this state
-  const [country, setCountry] = useState("USA"); // Default country
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [country, setCountry] = useState("USA");
+  const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [familyId, setFamilyId] = useState("");
   const [familyEmail, setFamilyEmail] = useState("");
 
-  // Load countries once
   useEffect(() => {
     const allCountries = Country.getAllCountries();
     setCountries(allCountries);
   }, []);
-
-  // Load states and cities when country changes
   useEffect(() => {
-    if (country) {
-      const selectedCountry = countries.find(
-        (c) => c.name === country || c.isoCode === country
-      );
+    if (!country) {
+      setStates([]);
+      setState("");
+      setCities([]);
+      setCity("");
+      return;
+    }
 
-      if (selectedCountry) {
-        // Get all states of the selected country
-        const allStates = State.getStatesOfCountry(selectedCountry.isoCode);
-        setStates(allStates);
+    const selectedCountry = countries.find(
+      (c) => c.name === country || c.isoCode === country
+    );
 
-        // Collect cities from all states
-        const allCities = allStates.flatMap((state) =>
-          City.getCitiesOfState(selectedCountry.isoCode, state.isoCode)
-        );
+    if (selectedCountry) {
+      const allStates = State.getStatesOfCountry(selectedCountry.isoCode);
+      setStates(allStates);
 
-        // If you want only city names in the dropdown
-        const cityNames = allCities.map((city) => city.name);
-
-        setCities(cityNames);
-        setCity(""); // reset city when country changes
-      } else {
-        setCities([]);
-        setStates([]);
-        setCity("");
-      }
+      setState("");   // reset state
+      setCities([]);  // reset cities
+      setCity("");
     }
   }, [country, countries]);
+
+
+  useEffect(() => {
+    if (!state || !country) {
+      setCities([]);
+      setCity("");
+      return;
+    }
+
+    const selectedCountry = countries.find(
+      (c) => c.name === country || c.isoCode === country
+    );
+
+    const selectedState = states.find(
+      (s) => s.name === state || s.isoCode === state
+    );
+
+    if (selectedCountry && selectedState) {
+      const stateCities = City.getCitiesOfState(
+        selectedCountry.isoCode,
+        selectedState.isoCode
+      );
+
+      setCities(stateCities.map((city) => city.name));
+      setCity("");
+    }
+  }, [state, country, states]);
+
 
   const toggleSlot = (index) => {
     if (openSlotIndex === index) {
@@ -141,11 +360,10 @@ const [studentList, setStudentList] = useState([]);
 
   const generateReferralId = () => {
     const specialChars = "ALF-REFID-";
-    const randomNum = Math.floor(10000 + Math.random() * 90000); // Ensures a 5-digit number
+    const randomNum = Math.floor(10000 + Math.random() * 90000);
     return specialChars + randomNum;
   };
 
-  // Initialize the referral ID when the component is loaded
   const [referral, setReferral] = useState(generateReferralId());
 
   /**
@@ -153,18 +371,13 @@ const [studentList, setStudentList] = useState([]);
    * @param {string} value - The phone number value
    * @param {PhoneChangeData} data - The phone change data object
    */
+
+
   const handlePhoneChange = (value, data) => {
-    // Log the value to understand what is being passed
-    console.log("Phone input value:", value);
-
-    // Ensure value contains only digits (strip non-numeric characters)
-    const numericValue = value.replace(/\D/g, ""); // Keep only numeric characters
-
-    // Update state with numericValue
-    setPhoneNumber(numericValue);
-    setCountryCode(data.countryCode || ""); // Set countryCode, fallback to empty string
+    setPhoneNumber(value);
+    // Optional: update country code if needed using data.countryCode
+    // setCountryCode(data.countryCode); 
   };
-
   /**
    * Handles date changes
    * @param {Value} value - The selected date value
@@ -174,10 +387,9 @@ const [studentList, setStudentList] = useState([]);
       setStartDate(value);
       setToDate(value);
 
-      // Format date as YYYY-MM-DD
       const formattedDate = value.toISOString().split("T")[0];
 
-      loadAvailableTimes(formattedDate); // pass the date to loadAvailableTimes
+      loadAvailableTimes(formattedDate);
     }
   };
   const selectedCoach =
@@ -197,7 +409,6 @@ const [studentList, setStudentList] = useState([]);
 
       console.log("Raw API response:", data);
 
-      // Map over the array of coaches and only keep start times
       const uniqueCoaches = data.map((coach) => ({
         academicCoachId: coach.academicCoachId,
         availableSlots: coach.availableSlots.map((slot) => ({
@@ -250,10 +461,8 @@ const [studentList, setStudentList] = useState([]);
   };
 
   const validateStep2 = () => {
-    // Check if at least one learning interest is selected
     return (
-      learningInterest.length > 0 && // At least one interest must be selected
-      // numberOfStudents &&
+      learningInterest.length > 0 &&
       preferredTeacher &&
       referralSource
     );
@@ -293,16 +502,28 @@ const [studentList, setStudentList] = useState([]);
     setIsLoading(true);
 
     try {
-      // Validate required fields before submission
-      if (!validateStep1().isValid || !validateStep2() || !validateStep3()) {
-        // alert("Please fill in all required fields");
+      const v1 = validateStep1();
+      if (!v1.isValid) {
+        // alert(`Please check Step 1: ${v1.field}`);
+        setIsLoading(false);
+        setStep(1);
+        return;
+      }
+
+      if (!validateStep2()) {
+        // alert("Please complete all fields in Step 2");
+        setIsLoading(false);
+        setStep(2);
+        return;
+      }
+
+      const v3 = validateStep3();
+      if (!v3) {
+        // alert("Please select a date, a coach slot, and a time.");
         setIsLoading(false);
         return;
       }
-      // Clean and format the phone number - remove any non-numeric characters
-      // const cleanPhoneNumber = phoneNumber.toString().replace(/\D/g, '');
       function formatDateLocal(date) {
-        // Returns yyyy-mm-dd in local time
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
@@ -320,13 +541,12 @@ const [studentList, setStudentList] = useState([]);
         countryCode: countryCode.toLowerCase(),
         city: city,
         learningInterest: learningInterest[0],
-        // numberOfStudents: Number(numberOfStudents),
         preferredTeacher: preferredTeacher,
         preferredFromTime: preferredFromTime,
         preferredToTime: preferredToTime,
         referralSource: referralSource,
- familyId: formData.familyId?.trim() || "",
-    familyEmail: formData.familyEmail?.trim() || "", 
+        familyId: formData.familyId?.trim() || "",
+        familyEmail: formData.familyEmail?.trim() || "",
         referralDetails: referralSourceOther || referral || "",
         startDate: formatDateLocal(startDate),
         endDate: formatDateLocal(toDate),
@@ -345,7 +565,6 @@ const [studentList, setStudentList] = useState([]);
       console.log("Form data with AC ID:", formattedData);
       console.log("Selected AC ID at submission:", selectedACId);
 
-      // Debug log to check the data being sent
       console.log("Sending data:", formattedData);
       const response = await fetch(
         `https://api.blackstoneinfomaticstech.com/student`,
@@ -360,7 +579,6 @@ const [studentList, setStudentList] = useState([]);
         }
       );
 
-      // Log the raw response
       console.log("Raw response:", response);
 
       if (!response.ok) {
@@ -374,7 +592,6 @@ const [studentList, setStudentList] = useState([]);
       const data = await response.json();
       console.log("Success response:", data);
 
-      // Reset form and redirect on success
       alert("Form submitted successfully!");
       router.push("/Thankyou");
     } catch (error) {
@@ -408,13 +625,6 @@ const [studentList, setStudentList] = useState([]);
    * @param {React.ChangeEvent<HTMLSelectElement>} e - The change event
    */
 
-  // const formatTime = (hours, minutes) => {
-  //   const period = hours >= 12 ? "PM" : "AM";
-  //   const formattedHours = (hours % 12 || 12).toString().padStart(2, "0"); // Ensure two-digit format
-  //   const formattedMinutes = minutes.toString().padStart(2, "0");
-  //   return `${formattedHours}:${formattedMinutes} ${period}`;
-  // };
-
   const calculatePreferredToTime = (fromTime) => {
     for (const coach of allSlots) {
       const match = coach.availableSlots.find(
@@ -425,696 +635,551 @@ const [studentList, setStudentList] = useState([]);
     return ""; // fallback
   };
 
-  // useEffect(() => {
-  //   const fetchedCities = countriesCities.getCities(country);
-  //   setCities(fetchedCities);
-  //   setCity("");
-  // }, [country]);
 
   useEffect(() => {
-    // Get all available time zones
     const timeZones = Intl.supportedValuesOf("timeZone");
     setTimeZones(timeZones);
   }, []);
 
   const [timeZones, setTimeZones] = useState([]);
 
-const handleFamilyIdChange = (e) => {
-  const id = e.target.value.trim();
+  const handleFamilyIdChange = (e) => {
+    const id = e.target.value.trim();
 
-  // Always store user input
-  setFormData((prev) => ({
-    ...prev,
-    familyId: id,
-  }));
-
-  if (!id) {
-    // Clear email if input cleared
     setFormData((prev) => ({
       ...prev,
-      familyEmail: "",
+      familyId: id,
     }));
-    return;
-  }
 
-  // Check if familyId exists in student list
-  const match = studentList.find(
-    (item) => item.familyId?.toLowerCase() === id.toLowerCase()
-  );
+    if (!id) {
+      setFormData((prev) => ({
+        ...prev,
+        familyEmail: "",
+      }));
+      return;
+    }
 
-  if (match) {
-    // Auto-fill familyEmail
+    const match = studentList.find(
+      (item) => item.familyId?.toLowerCase() === id.toLowerCase()
+    );
+
+    if (match) {
+      setFormData((prev) => ({
+        ...prev,
+        familyEmail: match.familyEmail || "",
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        familyEmail: "",
+      }));
+    }
+  };
+
+
+
+  const handleFamilyEmailChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      familyEmail: match.familyEmail || "",
+      familyEmail: e.target.value
     }));
-  } else {
-    // Do NOT auto-create a familyId
-    setFormData((prev) => ({
-      ...prev,
-      familyEmail: "", // user can enter manually
-    }));
-  }
-};
-
-
-
-const handleFamilyEmailChange = (e) => {
-  setFormData((prev) => ({
-    ...prev,
-    familyEmail: e.target.value
-  }));
-};
+  };
 
 
 
 
-useEffect(() => {
-  axios.get("https://api.blackstoneinfomaticstech.com/studentlist")
-.then((res) => {
-    setStudentList(res.data.students); 
-  })    .catch((err) => console.log(err));
-}, []);
-const [formData, setFormData] = useState({
-  familyId: "",
-  familyEmail: "",
-});
+  useEffect(() => {
+    axios.get("https://api.blackstoneinfomaticstech.com/studentlist")
+      .then((res) => {
+        setStudentList(res.data.students);
+      }).catch((err) => console.log(err));
+  }, []);
+  const [formData, setFormData] = useState({
+    familyId: "",
+    familyEmail: "",
+  });
+
+
+
+
+
 
 
   return (
-    <div className="flex items-center p-2 sm:p-6 min-h-screen bg-gradient-to-r from-[#d9d9da] to-[#d9d9da]">
-      <div className="w-full max-w-[100%] sm:max-w-[40%] mx-auto justify-center p-4 sm:p-6 align-middle rounded-br-[20px] rounded-tl-[20px] rounded-bl-[20px] rounded-tr-[20px] shadow-md bg-gradient-to-r from-[#fff] via-[#f8f8f8] to-[#fff]">
-        <div className="flex justify-between items-center mb-2">
-          <div className="text-xs sm:text-sm font-medium">Complete 3 Steps</div>
-          <div className="text-xs sm:text-sm font-medium">
-            {step * (33.4).toFixed(0)}%
-          </div>
-        </div>
-        <div className="w-full bg-[#dfdfdf] rounded-full h-2.5 mb-0">
-          <div
-            className="bg-[#293552] h-2.5 rounded-full"
-            style={{ width: `${step * 33.4}%` }}
-          ></div>
-        </div>
+    <div className="min-h-screen bg-[#E9EFFF] flex px-4 py-2 sm:p-4 gap-8">
 
-        <form onSubmit={handleSubmit}>
+      {/* LEFT PROGRESS */}
+      <ProgressSidebar step={step} />
+
+      {/* RIGHT FORM AREA */}
+      <div className="flex-1 bg-white p-4 sm:p-6 bg-gradient-to-br from-[#D6DBF5] to-[#F4F7FF]
+rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border-[#fff] border-8">
+        <form onSubmit={handleSubmit} className="p-2 bg-[#fff] rounded-2xl">
+          {/* ================= STEP 1 ================= */}
           {step === 1 && (
             <div>
-              <div className="flex justify-center align-middle p-4 mb-4 gap-2">
+              <div className="flex justify-center p-3 gap-2">
                 <Image
                   src="/assets/img/blackstoneAcademy.png"
                   width={150}
                   height={150}
-                  className="bg-cover bg-center"
                   alt="logo"
                 />
-                {/* <div className="text-white mt-2">
-                  <h3 className="font-bold text-[21px] text-[#273754]">
-                    AL FURQAN
-                  </h3>
-                  <h4 className="font-medium text-[19px] justify-end ml-8 -mt-2 font-sans text-[#F992A9]">
-                    academy
-                  </h4>
-                </div> */}
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4">
-                <div>
-                  <label
-                    htmlFor="First Name"
-                    className="text-[14px] text-[#293453]"
-                  >
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                    minLength={3}
-                    className={`w-full p-2 placeholder:text-[12px] border text-[13px] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50`}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="Last Name"
-                    className="text-[14px] text-[#293453]"
-                  >
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                    minLength={3}
-                    className={`w-full p-2 border placeholder:text-[12px] text-[13px] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50`}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label htmlFor="Email" className="text-[14px] text-[#293453]">
-                    Email
-                  </label>
-                  <br />
-                  <input
-                    type="email"
-                    placeholder="Email Address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    minLength={3}
-                    className={`w-full p-2 border placeholder:text-[12px] rounded-lg text-[13px] focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50`}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="Gender"
-                    className="text-[14px] text-[#293453]"
-                  >
-                    Gender
-                  </label>
-                  <br />
-                  <select
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    required
-                    className="w-full px-4 py-[8px] placeholder:text-[12px]  border rounded-lg text-[11px] focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50"
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-6 mb-4">
-                <div>
-                  <label
-                    htmlFor="Phone Number"
-                    className="text-[14px] text-[#293453]"
-                  >
-                    Phone Number
-                  </label>
-                  <PhoneInput
-                    country={countryCode.toLowerCase()}
-                    value={phoneNumber ? String(phoneNumber) : ""}
-                    onChange={handlePhoneChange}
-                    inputClass="w-full placeholder:text-[12px] text-[11px] placeholder:text-[#B4AAC5] rounded-lg py-[17px] focus:outline-none focus:ring-1 focus:ring-[#293552]"
-                    containerClass="w-full"
-                    buttonStyle={{
-                      backgroundColor: "rgb(249,250,251)",
-                      borderColor: "#e5e7eb",
-                      fontSize: "9px",
-                    }}
-                    inputStyle={{
-                      backgroundColor: "rgb(249,250,251)",
-                      width: "100%",
-                      borderColor: "#e5e7eb",
-                      fontSize: "11px",
-                    }}
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="Country"
-                    className="text-[14px] text-[#293453]"
-                  >
-                    Country
-                  </label>
-                  <select
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                    className="w-full px-4 py-[8px] rounded-lg text-[#293552] text-[11px] border  focus:ring-1 focus:ring-[#293552] focus:outline-none bg-gray-50"
-                  >
-                    <option value="">Select Country</option>
-                    {countries.map((c) => (
-                      <option key={c.isoCode} value={c.name}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6 mb-[12px]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 p-3">
+                <FloatingInput label="First Name" value={firstName || ""} onChange={(e) => setFirstName(e.target.value)} required minLength={3} />
+                <FloatingInput label="Last Name" value={lastName || ""} onChange={(e) => setLastName(e.target.value)} required minLength={3} />
+                <FloatingInput label="Email" value={email || ""} onChange={(e) => setEmail(e.target.value)} required minLength={3} />
+
+                <FloatingSelect label="Gender" value={gender || ""} onChange={(e) => setGender(e.target.value)} required>
+                  <option value="" className="-mt-10">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </FloatingSelect>
+
+                <FloatingPhoneInput
+                  label="Phone Number"
+                  value={phoneNumber ? String(phoneNumber) : ""}
+                  onChange={handlePhoneChange}
+                  country={countryCode.toLowerCase()}
+                />
+
+                <FloatingSelect label="Country" value={country} onChange={(e) => {
+                  const selectedCountry = countries.find((c) => c.name === e.target.value);
+                  setCountry(e.target.value);
+                  if (selectedCountry) {
+                    setCountryCode(selectedCountry.phonecode);
+                  }
+                }} required>
+                  <option value="">Select Country</option>
+                  {countries.map((c) => (<option key={c.isoCode} value={c.name}> {c.name} </option>))}
+                </FloatingSelect>
+                <FloatingSelect label="State" value={state} onChange={(e) => setState(e.target.value)} required>
+                  <option value="">Select State</option>
+                  {states.map((c) => (<option key={c.isoCode} value={c.name}> {c.name} </option>))}
+                </FloatingSelect>
+
+                <FloatingSelect label="City" value={city} onChange={(e) => setCity(e.target.value)} required>
+                  <option value="">Select a city</option>
+                  {cities.map((cityName) => (<option key={cityName} value={cityName}> {cityName} </option>))}
+                </FloatingSelect>
+
+                <FloatingInput label="Referred by" value={refernceby ?? ''} onChange={(e) => setReferral(e.target.value)} required readOnly />
+
+                <FloatingInput label="Your Referral Code" value={referral ?? ''} onChange={(e) => setReferral(e.target.value)} required readOnly />
+                <FloatingSelect label="Time Zone" value={timeZone} onChange={(e) => setTimeZone(e.target.value)} required className="sm:col-span-2">
+                  <option value="">Select Time Zone</option>
+                  {timeZones.map((tz) => (<option key={tz} value={tz}> {tz} </option>))}
+                </FloatingSelect>
+
                 <div>
-                  <label htmlFor="City" className="text-[14px] text-[#293453]">
-                    City
-                  </label>
-                  <select
-                    id="city"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full px-4 py-[8px] rounded-lg text-[#293552] text-[11px] border  focus:ring-1 focus:ring-[#293552] focus:outline-none bg-gray-50"
-                  >
-                    <option value="">Select a city</option>
-                    {cities.map((cityName) => (
-                      <option key={cityName} value={cityName}>
-                        {cityName}
-                      </option>
-                    ))}
-                  </select>
+                  <div>
+                    <span
+                      className="flex text-sm items-center gap-2 cursor-pointer text-[#293552]"
+                      onClick={() => {
+                        setIsActive(!isActive);
+
+                        if (!isActive) {
+                          setFamilyEmail("");
+                          setFamilyId("");
+                        } else {
+                          setFamilyId("");
+                          setFamilyEmail("");
+                        }
+                      }}
+                    >
+                      If you have Family Id (Click here)
+                      {isActive ? (
+                        <IoToggle size={22} className="text-[#293552]" />
+                      ) : (
+                        <IoToggle size={22} className="text-gray-400 rotate-180" />
+                      )}
+                    </span>
+                  </div>
+                  <div>
+                    {isActive && (
+                      <div className="mt-3">
+                        <FloatingInput label="Family Id" value={formData.familyId} onChange={handleFamilyIdChange} required />
+                      </div>
+                    )}
+                  </div>
                 </div>
+
                 <div>
-                  <label
-                    htmlFor="Referral Code"
-                    className="text-[14px] text-[#293453]"
-                  >
-                    Referred by
-                  </label>
-
-                  <br />
-                  <input
-                    type="text"
-                    placeholder="Referral Code"
-                    readOnly
-                    value={refernceby ?? ''}
-                    onChange={(e) => setReferral(e.target.value)}
-                    className={`w-full px-4 py-[8px] border text-[11px] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50`}
-                  />
+                  <div className="mt-9">
+                    <FloatingInput label="Family Email Id" value={formData.familyEmail} onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        familyEmail: e.target.value,
+                      }))
+                    }
+                      className="w-full px-4 py-[8px] border text-[11px] rounded-lg 
+              focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label
-                    htmlFor="Referral Code"
-                    className="text-[14px] text-[#293453]"
-                  >
-                    Your Referral Code
-                  </label>
-
-                  <br />
-                  <input
-                    type="text"
-                    placeholder="Referral Code"
-                    readOnly
-                    value={referral}
-                    onChange={(e) => setReferral(e.target.value)}
-                    className={`w-full px-4 py-[8px] border text-[11px] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50`}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="Time Zone"
-                    className="text-[14px] text-[#293453]"
-                  >
-                    Time Zone
-                  </label>
-                  <select
-                    id="timeZone"
-                    value={timeZone}
-                    onChange={(e) => setTimeZone(e.target.value)}
-                    className="w-full px-4 py-[8px] rounded-lg text-[#293552] text-[11px] border focus:ring-1 focus:ring-[#293552] focus:outline-none bg-gray-50"
-                  >
-                    {timeZones.map((tz) => (
-                      <option key={tz} value={tz}>
-                        {tz}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-               <div>
-  {/* Toggle */}
-  <div>
-    <span
-      className="flex text-sm items-center gap-2 cursor-pointer text-[#293552]"
-      onClick={() => {
-        setIsActive(!isActive);
-
-        if (!isActive) {
-          // Switching to Family ID Mode
-          setFamilyEmail("");
-          setFamilyId("");
-        } else {
-          // Switching back to Manual Email Mode
-          setFamilyId("");
-          setFamilyEmail("");
-        }
-      }}
-    >
-      If you have Family Id (Click here)
-      {isActive ? (
-        <IoToggle size={22} className="text-[#293552]" />
-      ) : (
-        <IoToggle size={22} className="text-gray-400 rotate-180" />
-      )}
-    </span>
-  </div>
-
-  {/* FAMILY ID — only when toggle ON */}
-  {isActive && (
-    <div className="mt-2">
-      <label className="text-[14px] text-[#293453]">Family Id</label>
-      <input
-        type="text"
-        placeholder="Enter Family Id"
-       value={formData.familyId}
-  onChange={handleFamilyIdChange}
-        className="w-full px-4 py-[8px] border text-[11px] rounded-lg 
-        focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50 mb-2"
-      />
-    </div>
-  )}
-
-  {/* FAMILY EMAIL — Always visible, Auto-fill when toggle ON */}
-  <div className="mt-2">
-    <label className="text-[14px] text-[#293453]">Family Email Id</label>
-   <input
-  type="text"
-  placeholder="Family Email Id"
-  value={formData.familyEmail}
-  onChange={(e) =>
-    setFormData((prev) => ({
-      ...prev,
-      familyEmail: e.target.value,
-    }))
-  }
-  className="w-full px-4 py-[8px] border text-[11px] rounded-lg 
-            focus:outline-none focus:ring-1 focus:ring-[#293552] bg-gray-50"
-/>
-  </div>
-</div>
-
-
-
-              
               </div>
-
-
-
               <div className="flex justify-center mt-4">
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  className=" text-[14px] sm:text-[16px] p-2 py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-br-[8px] rounded-tl-[8px] rounded-bl-[8px] rounded-tr-[8px] shadow-lg"
-                >
+                <button type="button" onClick={nextStep}
+                  className="px-6 py-2 bg-[#293552] text-white rounded-lg shadow-lg">
                   Next
                 </button>
               </div>
             </div>
           )}
 
+          {/* ================= STEP 2 ================= */}
           {step === 2 && (
-            <div>
+            <div className="">
+
+              {/* Back */}
               <button
                 type="button"
                 onClick={prevStep}
-                aria-label="Go back to previous step"
-                className="text-gray-500 p-2 py-4 text-[12px]"
+                className="text-gray-500 text-[12px] mb-4 hover:text-[#293552]"
               >
-                ← back
+                ← Back
               </button>
-              <h2 className="text-[12px] sm:text-[14px] text-center font-bold mb-4 text-[#293552]">
+
+              {/* ===== Section 1 ===== */}
+              <h2 className="text-[14px] font-bold text-center text-[#293552] mb-2">
                 What will you use AL Furqan for?
               </h2>
-              <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-4 mb-10 text-[11px] sm:text-[11px]">
+              <p className="text-center text-[11px] text-gray-500 mb-4">
+                Choose your primary learning interest
+              </p>
+
+              <div className="grid grid-cols-3 gap-3 mb-8 px-10">
                 {["Quran", "Islamic Studies", "Arabic"].map((option) => (
                   <button
                     key={option}
-                    type="button"
-                    onClick={() => {
-                      // Set the selected learning interest
-                      setLearningInterest([option]); // Set the selected option as the only interest
-                    }}
-                    className={`hover:transition-all duration-500 ease-in-out rounded-xl p-3 text-black shadow-sm ${learningInterest[0] === option
-                      ? "bg-[#0c13752e] font-semibold"
-                      : "bg-gray-100"
+                    onClick={() => setLearningInterest([option])}
+                    className={`rounded-xl p-4 text-center transition-all duration-300 border
+          ${learningInterest[0] === option
+                        ? "bg-[#0c13752e] border-[#293552] shadow-md scale-[1.02]"
+                        : "bg-white border-gray-200 hover:border-[#293552]"
                       }`}
                   >
-                    {option}
+                    <span className="block text-[11px] font-semibold text-[#293552]">
+                      {option}
+                    </span>
                   </button>
                 ))}
               </div>
 
-              {/* <h2 className="text-center font-bold mb-3 text-[#293552] text-[14px]">
-                How many students will join?
+              {/* ===== Section 2 ===== */}
+              <h2 className="text-[14px] font-bold text-center text-[#293552] mb-2">
+                Preferred Teacher
               </h2>
-              <div className="grid grid-cols-5 gap-4 mb-6 rounded-xl text-[12px]">
-                {[1, 2, 3, 4, 5].map((count) => (
-                  <button
-                    key={count}
-                    type="button"
-                    onClick={() => setNumberOfStudents(count.toString())}
-                    className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${numberOfStudents === count.toString()
-                      ? "bg-[#0c13752e] font-semibold"
-                      : "bg-gray-100"
-                      }`}
-                  >
-                    {count}
-                  </button>
-                ))}
-              </div> */}
+              <p className="text-center text-[11px] text-gray-500 mb-4">
+                Select your comfort preference
+              </p>
 
-              <h2 className="text-[14px] text-center font-bold mb-4 text-[#293552]">
-                Which teacher would you like?
-              </h2>
-              <div className="grid grid-cols-2 gap-4 mb-10 text-[11px]">
+              <div className="grid grid-cols-2 gap-4 mb-8 px-10">
                 {["Male", "Female"].map((preference) => (
                   <button
                     key={preference}
-                    type="button"
                     onClick={() => setPreferredTeacher(preference)}
-                    className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${preferredTeacher === preference
-                      ? "bg-[#0c13752e] font-semibold"
-                      : "bg-gray-100"
+                    className={`rounded-xl p-4 transition-all duration-300 border
+          ${preferredTeacher === preference
+                        ? "bg-[#0c13752e] border-[#293552] shadow-md"
+                        : "bg-white border-gray-200 hover:border-[#293552]"
                       }`}
                   >
-                    {preference}
+                    <span className="text-[12px] font-semibold text-[#293552]">
+                      {preference}
+                    </span>
                   </button>
                 ))}
               </div>
 
-              <div className="mt-4">
-                <h2 className="text-[14px] text-center font-bold mb-4 text-[#293552]">
-                  Where did you hear about AL Furqan?
-                </h2>
-                <div className="grid grid-cols-3 sm:grid sm:grid-cols-5 gap-4 mb-10 text-[10px]">
-                  {["Friend", "Social Media", "E-Mail", "Google", "Other"].map(
-                    (source) => (
-                      <button
-                        key={source}
-                        type="button"
-                        onClick={() => setReferralSource(source)}
-                        className={`p-3 hover:transition-all duration-500 shadow-sm ease-in-out rounded-xl text-[#000] ${referralSource === source
-                          ? "bg-[#0c13752e] font-semibold"
-                          : "bg-gray-100"
-                          }`}
-                      >
-                        {source}
-                      </button>
-                    )
-                  )}
-                </div>
+              {/* ===== Section 3 ===== */}
+              <h2 className="text-[14px] font-bold text-center text-[#293552] mb-2">
+                How did you hear about us?
+              </h2>
+              <p className="text-center text-[11px] text-gray-500 mb-4">
+                Helps us improve our outreach
+              </p>
 
-                {referralSource === "Other" && (
-                  <div className="mb-6">
-                    <input
-                      type="text"
-                      placeholder="Please specify where you heard about us"
-                      value={referralSourceOther}
-                      onChange={(e) => setReferralSourceOther(e.target.value)}
-                      className="w-full p-2 border-[#b7b8d6] border-[1px]  rounded-lg placeholder:text-[12px] text-[12px] focus:outline-none shadow-sm focus:ring-1 focus:ring-[#293552] bg-gray-100"
-                    />
-                  </div>
-                )}
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-4 px-10">
+                {["Friend", "Social Media", "E-Mail", "Google", "Other"].map((source) => (
+                  <button
+                    key={source}
+                    onClick={() => setReferralSource(source)}
+                    className={`rounded-xl p-3 transition-all duration-300 border text-[10px]
+          ${referralSource === source
+                        ? "bg-[#0c13752e] border-[#293552] shadow-md"
+                        : "bg-white border-gray-200 hover:border-[#293552]"
+                      }`}
+                  >
+                    {source}
+                  </button>
+                ))}
               </div>
-              <div className="flex justify-center mt-4">
+
+              {/* Other input */}
+              {referralSource === "Other" && (
+                <input
+                  type="text"
+                  placeholder="Please specify..."
+                  value={referralSourceOther}
+                  onChange={(e) => setReferralSourceOther(e.target.value)}
+                  className="w-full p-3 text-[12px] rounded-lg border border-gray-300 bg-gray-50
+                   focus:outline-none focus:ring-1 focus:ring-[#293552]"
+                />
+              )}
+
+              {/* ===== CTA ===== */}
+              <div className="flex justify-center mt-8">
                 <button
                   type="button"
                   onClick={nextStep}
-                  className="sm:w-auto sm:justify-end sm:ml-[240px] text-[14px] sm:text-[16px] p-2 py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-br-[8px] rounded-tl-[8px] rounded-bl-[8px] rounded-tr-[8px] shadow-lg"
+                  className="px-8 py-3 bg-[#293552] text-white text-[14px]
+                   rounded-xl shadow-lg hover:scale-[1.03] transition-all"
                 >
-                  Next
+                  Continue →
                 </button>
               </div>
             </div>
           )}
 
-          {step === 3 && (
-            <div className="p-2 sm:p-4 rounded-3xl justify-center align-middle">
-              <button
-                type="button"
-                onClick={prevStep}
-                className="text-gray-500 p-2 py-2 mb-4 text-[12px] hover:text-gray-700 transition-colors"
-              >
-                ← back
-              </button>
 
-              <div className="text-center mb-4 sm:mb-6">
-                <h2 className="text-[14px] sm:text-[18px] font-bold text-[#293552]">
-                  Select a Date and Time
+          {/* ================= STEP 3 ================= */}
+          {step === 3 && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 mt-10">
+              {/* Header & Back Button */}
+              <div className="flex items-center justify-between mb-8">
+                <button
+                  type="button"
+                  onClick={prevStep}
+                  className="text-gray-500 hover:text-[#293552] transition-colors flex items-center gap-2 group text-sm font-medium"
+                >
+                  <span className="group-hover:-translate-x-1 transition-transform">←</span> Back
+                </button>
+                <h2 className="text-[16px] font-bold text-[#293552] pr-12 sm:pr-0">
+                  Select Date & Time
                 </h2>
+                <div className="hidden sm:block w-12" />
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                <div className="w-full sm:w-auto p-2 rounded-[15px] shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)]">
-                  <style
-                    dangerouslySetInnerHTML={{
+              <div className="flex flex-col lg:flex-row gap-8">
+                {/* Left Column: Calendar */}
+                <div className="flex-1 w-full max-w-[400px] mx-auto lg:mx-0">
+                  <div className="bg-white p-4 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100">
+                    <style dangerouslySetInnerHTML={{
                       __html: `
                         .react-calendar {
                           width: 100% !important;
-                          background-color: rgb(229, 231, 235) !important;
+                          background-color: white !important;
                           border: none !important;
-                          border-radius: 15px !important;
-                          padding:15px !important;
+                          font-family: inherit !important;
                         }
-                        
-                        .react-calendar .react-calendar__month-view__days__day {
+                        .react-calendar__navigation button {
+                          color: #293552 !important;
+                          min-width: 44px !important;
+                          background: none !important;
+                          font-size: 16px !important;
+                          font-weight: 600 !important;
+                        }
+                        .react-calendar__navigation button:enabled:hover,
+                        .react-calendar__navigation button:enabled:focus {
+                          background-color: #f3f4f6 !important;
+                          border-radius: 8px !important;
+                        }
+                        .react-calendar__month-view__weekdays {
+                          text-align: center !important;
+                          text-transform: uppercase !important;
+                          font-weight: 600 !important;
                           font-size: 10px !important;
-                          color: black !important;
+                          color: #9ca3af !important;
+                          margin-bottom: 8px !important;
                         }
-
-                        .react-calendar .react-calendar__month-view__days__day--weekend:nth-child(7n + 1) {
+                       .react-calendar__year-view .react-calendar__tile, 
+                       .react-calendar__decade-view .react-calendar__tile, 
+                       .react-calendar__century-view .react-calendar__tile {
+                          padding: 1.5em 0.5em !important;
+                        }
+                        .react-calendar__tile {
+                          padding: 12px 6px !important;
+                          background: none !important;
+                          text-align: center !important;
+                          line-height: 16px !important;
+                          font-size: 12px !important;
+                          font-weight: 500 !important;
+                          color: #374151 !important;
+                          border-radius: 8px !important;
+                          transition: all 0.2s !important;
+                        }
+                        .react-calendar__tile:enabled:hover,
+                        .react-calendar__tile:enabled:focus {
+                          background-color: #eff6ff !important;
+                          color: #fff !important;
+                        }
+                        .react-calendar__tile--now {
+                          background: #f3f4f6 !important;
+                          color: #293552 !important;
+                        }
+                        .react-calendar__tile--active {
+                          background: #293552 !important;
+                          color: white !important;
+                          box-shadow: 0 4px 12px rgba(41, 53, 82, 0.3) !important;
+                        }
+                        .react-calendar__tile--active:enabled:hover,
+                        .react-calendar__tile--active:enabled:focus {
+                          background: #293552 !important;
+                        }
+                        .react-calendar__tile--sunday {
                           color: #ef4444 !important;
                         }
-                        
-                        .react-calendar .react-calendar__tile--active,
-                        .react-calendar .selected-date {
-                          background-color: #293552 !important;
+                        .react-calendar__tile--active.react-calendar__tile--sunday {
                           color: white !important;
-                          border-radius: 6px !important;
                         }
-
-                        .react-calendar .react-calendar__tile--active.react-calendar__month-view__days__day--weekend:nth-child(7n + 1),
-                        .react-calendar .selected-date.react-calendar__month-view__days__day--weekend:nth-child(7n + 1) {
-                          color: white !important;
-                          font-size: 10px !important;
-                        }
-
-                        /* Hide scrollbar for WebKit browsers */
-                        .scrollbar-hidden::-webkit-scrollbar {
-                          display: none; /* Safari and Chrome */
-                        }
-
-                        /* Hide scrollbar for Firefox */
-                        .scrollbar-hidden {
-                          scrollbar-width: none; /* Firefox */
-                        }
-                      `,
-                    }}
-                  />
-                  <Calendar
-                    onChange={handleDateChange}
-                    value={startDate}
-                    tileDisabled={isTileDisabled}
-                    className="mx-auto custom-calendar"
-                    selectRange={false}
-                    minDate={new Date()}
-                    tileClassName={({ date, view }) =>
-                      view === "month" &&
-                        date.toDateString() === startDate.toDateString()
-                        ? "selected-date"
-                        : null
-                    }
-                  />
+                      `
+                    }} />
+                    <Calendar
+                      onChange={handleDateChange}
+                      value={startDate}
+                      tileDisabled={isTileDisabled}
+                      minDate={new Date()}
+                      view="month"
+                      tileClassName={({ date }) => date.getDay() === 0 ? 'react-calendar__tile--sunday' : null}
+                      prevLabel={<span className="text-xl">‹</span>}
+                      nextLabel={<span className="text-xl">›</span>}
+                    />
+                  </div>
                 </div>
-                <div className="w-full sm:w-60 p-3 rounded-[15px] shadow-lg">
-                  <h3 className="text-sm text-center font-semibold mb-2 text-[#293552]">
-                    Available Slots
-                  </h3>
 
-                  <div className="flex flex-col gap-2 h-[330px] overflow-scroll scrollbar-hide">
-                    <style jsx>{`
-                      .scrollbar-hide::-webkit-scrollbar {
-                        display: none;
-                      }
-                      .scrollbar-hide {
-                        -ms-overflow-style: none;
-                        scrollbar-width: none;
-                      }
-                    `}</style>
-                    {availableTimes.map((coach, index) => (
-                      <div key={coach.academicCoachId || index}>
-                        <button
-                          onClick={() => toggleSlot(index)}
-                          className={`w-full text-center px-2 py-2 rounded-full font-semibold ${openSlotIndex === index
-                            ? "bg-[#293552] text-white"
-                            : "bg-gray-200 hover:bg-gray-400"
-                            }`}
-                        >
-                          Slot {index + 1}
-                        </button>
+                {/* Right Column: Available Slots */}
+                <div className="flex-1 w-full min-w-0">
+                  <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 p-3 px-4 h-full max-h-[450px] min-h-[320px] flex flex-col overflow-hidden">
+                    <h3 className="text-sm font-bold text-[#293552] mb-4 flex-shrink-0">
+                      <span className="flex items-center gap-2">
+                        Available Slots
+                        <span className="text-[10px] font-normal text-gray-500 bg-gray-50 px-2 py-0.5 rounded-md">
+                          {startDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        </span>
+                      </span>
+                    </h3>
 
-                        {openSlotIndex === index && selectedSlotTimes && (
-                          <div className="mt-2 grid grid-cols-1 gap-3 text-xs">
-                            {selectedSlotTimes.length > 0 ? (
-                              selectedSlotTimes.map((slot, i) => (
-                                <button
-                                  type="button"
-                                  key={i}
-                                  onClick={() => {
-                                    setPreferredFromTime(slot.start);
-                                    setPreferredToTime(slot.end);
-                                    setSelectedCoachIndex(index);
-                                  }}
-                                  className={`p-2 rounded-lg text-center ${preferredFromTime === slot.start &&
-                                    selectedCoachIndex === index
-                                    ? "bg-gray-600 text-white"
-                                    : "bg-gray-200 hover:bg-gray-400"
-                                    }`}
-                                >
-                                  {slot.start}
-                                </button>
-                              ))
-                            ) : (
-                              <div className="col-span-2 text-center text-gray-500">
-                                No available slots
+                    <div className="overflow-y-auto overflow-x-hidden pr-2 custom-scrollbar flex-1 min-h-0 space-y-3">
+                      <style jsx>{`
+                        .custom-scrollbar::-webkit-scrollbar {
+                          width: 6px;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-track {
+                          background: #f3f4f6;
+                          border-radius: 10px;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-thumb {
+                          background-color: #d1d5db;
+                          border-radius: 10px;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                          background-color: #9ca3af;
+                        }
+                      `}</style>
+
+                      {availableTimes.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center text-gray-400 text-xs">
+                          <p>No slots available for this date.</p>
+                          <p>Please try selecting another date.</p>
+                        </div>
+                      ) : (
+                        availableTimes.map((coach, index) => (
+                          <div
+                            key={coach.academicCoachId || index}
+                            className={`border rounded-xl transition-all duration-300 ${openSlotIndex === index
+                              ? "border-[#293552] bg-blue-50/30 shadow-sm"
+                              : "border-gray-100 bg-gray-50 hover:border-gray-300"
+                              }`}
+                          >
+                            <button
+                              type="button"
+                              onClick={() => toggleSlot(index)}
+                              className="w-full flex items-center justify-between p-3  text-left"
+                            >
+                              <span className={`text-xs font-semibold ${openSlotIndex === index ? "text-[#293552]" : "text-gray-600"}`}>
+                                Coach Slot {index + 1}
+                              </span>
+                              <div className={`transition-transform duration-300 ${openSlotIndex === index ? "rotate-180" : ""}`}>
+                                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M1 1L5 5L9 1" stroke={openSlotIndex === index ? "#293552" : "#9CA3AF"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
                               </div>
-                            )}
+                            </button>
+
+                            <div
+                              className={`transition-[max-height] duration-300 ease-in-out overflow-hidden ${openSlotIndex === index ? "max-h-36" : "max-h-0"
+                                }`}
+                            >
+                              <div className="p-2 overflow-y-auto max-h-40 overflow-scroll scrollbar-none custom-scrollbar mb-2 grid grid-cols-4 gap-2">
+                                {selectedSlotTimes && selectedSlotTimes.length > 0 ? (
+                                  selectedSlotTimes.map((slot, i) => (
+                                    <button
+                                      type="button"
+                                      key={i}
+                                      onClick={() => {
+                                        setPreferredFromTime(slot.start);
+                                        setPreferredToTime(slot.end);
+                                        setSelectedCoachIndex(index);
+                                      }}
+                                      className={`
+                                        py-2 px-3 rounded-lg text-xs font-medium transition-all
+                                        ${preferredFromTime === slot.start && selectedCoachIndex === index
+                                          ? "bg-[#293552] text-white shadow-md"
+                                          : "bg-white text-gray-600 border border-gray-200 hover:border-[#293552] hover:text-[#293552]"
+                                        }
+                                      `}
+                                    >
+                                      {slot.start}
+                                    </button>
+                                  ))
+                                ) : (
+                                  <div className="col-span-2 text-center py-4 text-xs text-gray-400 font-medium bg-white rounded-lg border border-dashed border-gray-200">
+                                    All booked up!
+                                  </div>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        )}
-                      </div>
-                    ))}
+                        ))
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-center">
+              {/* Submit Action */}
+              <div className="flex justify-center mt-10">
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`justify-center mt-6 sm:mt-8 text-[12px] sm:text-[14px] p-2 align-middle py-2 px-4 bg-[#293552] text-white font-semibold hover:shadow-inner rounded-[10px] shadow-lg flex ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                  className={`
+                    relative overflow-hidden w-full sm:w-auto px-10 py-3.5 bg-[#293552] text-white rounded-xl shadow-lg 
+                    text-sm font-semibold transition-all duration-300 
+                    disabled:opacity-70 disabled:cursor-not-allowed
+                    hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]
+                  `}
                 >
                   {isLoading ? (
-                    <div className="flex items-center justify-center">
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Submitting...
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>Procssing...</span>
                     </div>
                   ) : (
-                    "Submit"
+                    "Confirm Booking"
                   )}
                 </button>
               </div>
             </div>
           )}
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
+
 
 export default MultiStepForm;
