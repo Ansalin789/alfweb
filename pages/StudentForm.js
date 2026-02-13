@@ -567,7 +567,7 @@ const MultiStepForm = () => {
 
       console.log("Sending data:", formattedData);
       const response = await fetch(
-        `http://localhost:5001/student`,
+        `http://api.blackstoneinfomaticstech.com/student`,
         {
           method: "POST",
           headers: {
@@ -689,7 +689,7 @@ const MultiStepForm = () => {
 
 
   useEffect(() => {
-    axios.get("http://localhost:5001/studentlist")
+    axios.get("http://api.blackstoneinfomaticstech.com/studentlist")
       .then((res) => {
         setStudentList(res.data.students);
       }).catch((err) => console.log(err));
